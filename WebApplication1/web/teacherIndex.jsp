@@ -14,13 +14,15 @@
     <body>
         
         <jsp:useBean id="teacherBean" class="ict.bean.teacherBean" scope="session"/>
-            Welcome s 
+            Welcome
                 <jsp:getProperty name="teacherBean" property="name" />
                 <br>
                 
                 <!--view what teach teach and what class he handle -->
-                <a href=""></a>
-        <a href="">View your Course</a>
+                <!--Function 1 -->
+                <a href="handleTeacherController?action=viewSchedule& tId=<jsp:getProperty name="teacherBean" property="tid" />">Class Schedule</a>
+                <!-- function2 -->
+                <a href="handleTeacherController?action=viewSubject& tId=<jsp:getProperty name="teacherBean" property="tid" />">View your Course</a>
         
     </body>
 </html>

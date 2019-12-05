@@ -65,7 +65,7 @@ public class loginController extends HttpServlet{
                         
         if(loginValid){
             HttpSession session = request.getSession(true);
-            teacherBean tb = db.getteacherBean(username);
+            teacherBean tb = db.getteacherBeanByTid(username);
             session.setAttribute("teacherBean", tb);
             targetURL = "teacherIndex.jsp";
         }else{
