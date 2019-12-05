@@ -12,7 +12,14 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <!--view what teach teach and what class he handle -->
+        
+        <jsp:useBean id="teacherBean" class="ict.bean.teacherBean" scope="session"/>
+            Welcome s 
+                <jsp:getProperty name="teacherBean" property="name" />
+                <br>
+                
+                <!--view what teach teach and what class he handle -->
+                <a href=""></a>
         <a href="">View your Course</a>
         
     </body>

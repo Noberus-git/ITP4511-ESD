@@ -5,6 +5,7 @@
  */
 package ict.db;
 
+import ict.bean.teacherBean;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -69,15 +70,25 @@ public class SAMSDB {
         try {
             cnnct = getConnection();  // the connection 
             stmnt = cnnct.createStatement();  // create statement
-            //create user table(student, teacher, )
+
             String sql
+                    = "CREATE TABLE IF NOT EXISTS `Class` ("
+                    + "cId varchar(10) NOT NULL,"
+                    + "Classname varchar(25) NOT NULL,"
+                    + "PRIMARY KEY (cId)"
+                    + ");";
+            stmnt.execute(sql);
+
+            sql
                     = "CREATE TABLE IF NOT EXISTS `Student` ("
                     + "studId varchar(10) NOT NULL,"
                     + "name varchar(25) NOT NULL,"
-                    + "className varchar(10) NOT NULL,"
+                    + "password varchar(25) NOT NULL,"
+                    + "cId varchar(10) NOT NULL,"
                     + "tel varchar(10) NOT NULL,"
                     + "age int(11) NOT NULL,"
-                    + "PRIMARY KEY (studId)"
+                    + "PRIMARY KEY (studId),"
+                    + "FOREIGN KEY (cId) REFERENCES Class(cId)"
                     + ");";
             stmnt.execute(sql);
 
@@ -85,6 +96,7 @@ public class SAMSDB {
                     = "CREATE TABLE IF NOT EXISTS `Teacher` ("
                     + "tId varchar(10) NOT NULL,"
                     + "name varchar(25) NOT NULL,"
+                    + "password varchar(25) NOT NULL,"
                     + "tel varchar(10) NOT NULL,"
                     + "age int(11) NOT NULL,"
                     + "PRIMARY KEY (tId)"
@@ -96,21 +108,30 @@ public class SAMSDB {
                     + "aId varchar(10) NOT NULL,"
                     + "name varchar(25) NOT NULL,"
                     + "tel varchar(10) NOT NULL,"
+                    + "password varchar(25) NOT NULL,"
                     + "age int(11) NOT NULL,"
                     + "PRIMARY KEY (aId)"
                     + ");";
             stmnt.execute(sql);
             sql
-                    = "CREATE TABLE IF NOT EXISTS `Lesson` ("
-                    + "LId varchar(10) NOT NULL,"
+                    = "CREATE TABLE IF NOT EXISTS `Subject` ("
+                    + "sId varchar(10) NOT NULL,"
                     + "SubjectName varchar(10) NOT NULL,"
                     + "tId varchar(10) NOT NULL,"
+                    + "PRIMARY KEY (sId),"
+                    + "FOREIGN KEY (tId) REFERENCES Teacher(tId))";
+            stmnt.execute(sql);
+
+            sql
+                    = "CREATE TABLE IF NOT EXISTS `Lesson` ("
+                    + "LId varchar(10) NOT NULL,"
+                    + "sId varchar(10) NOT NULL,"
+                    + "cId varchar(10) NOT NULL,"
                     + "Date date NOT NULL,"
                     + "PRIMARY KEY (LId),"
-                    + "FOREIGN KEY (tId) REFERENCES Teacher(tId))"
-                   ;
+                    + "FOREIGN KEY (cId) REFERENCES Class(cId));";
             stmnt.execute(sql);
-            
+
             sql
                     = "CREATE TABLE IF NOT EXISTS `StudLesson` ("
                     + "sLId varchar(10) NOT NULL,"
@@ -120,8 +141,7 @@ public class SAMSDB {
                     + "PRIMARY KEY (sLId),"
                     + "FOREIGN KEY (studId) REFERENCES Student(studId));";
             stmnt.execute(sql);
-            
-            
+
             stmnt.close();
             cnnct.close();
         } catch (SQLException ex) {
@@ -133,25 +153,32 @@ public class SAMSDB {
             ex.printStackTrace();
         }
     }
-    
-public boolean addStudRecord( String studId, String name, String tel, int age,String classid) {
+
+    public boolean teacherLoginIsValid(String tid, String password) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
         boolean isSuccess = false;
+        
         try {
+            //get max sid
             cnnct = getConnection();
-            String preQueryStatement = "INSERT  INTO  student  VALUES  (?,?,?,?)";
+            String preQueryStatement = "SELECT * FROM  `teacher` where tid=? and password=?;";
             pStmnt = cnnct.prepareStatement(preQueryStatement);
-            pStmnt.setString(1, studId);
-            pStmnt.setString(2, name);
-            pStmnt.setString(3, tel);
-            pStmnt.setInt(4, age);
-            int rowCount = pStmnt.executeUpdate();
-            if (rowCount >= 1) {
-                isSuccess = true;
-                addStudToClassRecord(studId,classid);
+            //3. update the placehoder with id
+            pStmnt.setString(1, tid);
+            pStmnt.setString(2, password);
+            
+            ResultSet rs = null;
+            //4. execute the query and assign to the result 
+            rs = pStmnt.executeQuery();
+            
+            if (rs.next()) {
+                // set the record detail to the customer bean
+                
+                isSuccess=true;
+                
             }
-
+            
             pStmnt.close();
             cnnct.close();
         } catch (SQLException ex) {
@@ -164,41 +191,32 @@ public boolean addStudRecord( String studId, String name, String tel, int age,St
         }
         return isSuccess;
     }
-
- 
-public boolean addStudToClassRecord( String studId ,String classid) {
+    
+    public teacherBean getteacherBean(String tid){
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
-        boolean isSuccess = false;
+        teacherBean tb= new teacherBean();
         
-        int maxScID=0;
         try {
             //get max sid
             cnnct = getConnection();
-            String preQueryStatement = "SELECT MAX(scId) FROM  `CUSTOMER`;";
-            
+            String preQueryStatement = "SELECT * FROM  `teacher` where tid=?;";
             pStmnt = cnnct.prepareStatement(preQueryStatement);
-           
+            //3. update the placehoder with id
+            pStmnt.setString(1, tid);
+            
+            
             ResultSet rs = null;
             //4. execute the query and assign to the result 
             rs = pStmnt.executeQuery();
-            if (rs.next()) {
-                maxScID=Integer.parseInt(rs.getString(1));
-                maxScID+=1;
-            }
-
-             preQueryStatement = "INSERT  INTO studclass VALUES  (?,?,?)";
-            pStmnt = cnnct.prepareStatement(preQueryStatement);
-            pStmnt.setString(1, String.valueOf(maxScID));
-            pStmnt.setString(2, studId);
-            pStmnt.setString(3, classid);
             
-            pStmnt.executeUpdate();
-            int rowCount = pStmnt.executeUpdate();
-            if (rowCount >= 1) {
-                isSuccess = true;
+            if (rs.next()) {
+                // set the record detail to the customer bean
+                tb.setTid(rs.getString(1));
+                tb.setName(rs.getString(2));
+                
             }
-
+            
             pStmnt.close();
             cnnct.close();
         } catch (SQLException ex) {
@@ -209,6 +227,7 @@ public boolean addStudToClassRecord( String studId ,String classid) {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return isSuccess;
+        return tb;
+                
     }
 }
