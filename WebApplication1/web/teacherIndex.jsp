@@ -12,6 +12,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <a href="">View your class</a>
+        <!--view what teach teach and what class he handle -->
+        <a href="">View your Course</a>
+        
     </body>
 </html>
