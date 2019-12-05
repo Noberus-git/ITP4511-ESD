@@ -74,6 +74,7 @@ public class SAMSDB {
                     = "CREATE TABLE IF NOT EXISTS `Student` ("
                     + "studId varchar(10) NOT NULL,"
                     + "name varchar(25) NOT NULL,"
+                    + "className varchar(10) NOT NULL,"
                     + "tel varchar(10) NOT NULL,"
                     + "age int(11) NOT NULL,"
                     + "PRIMARY KEY (studId)"
@@ -99,86 +100,27 @@ public class SAMSDB {
                     + "PRIMARY KEY (aId)"
                     + ");";
             stmnt.execute(sql);
-            
-            //create class table
-            sql
-                    = "CREATE TABLE IF NOT EXISTS `Class` ("
-                    + "classId varchar(10) NOT NULL,"
-                    + "className varchar(25) NOT NULL,"
-                    + "noOfStudent varchar(10) NOT NULL,"
-                    + "PRIMARY KEY (classId)"
-                    + ");";
-
-            stmnt.execute(sql);
-            //create subject table
-            sql
-                    = "CREATE TABLE IF NOT EXISTS `Subject` ("
-                    + "sId varchar(10) NOT NULL,"
-                    + "tId varchar(10) NOT NULL,"
-                    + "subjectName varchar(25) NOT NULL,"
-                    + "PRIMARY KEY (sId),"
-                    + "FOREIGN KEY (tId) REFERENCES Teacher(tId))";
-            stmnt.execute(sql);
-            
-             //create Lesson table
             sql
                     = "CREATE TABLE IF NOT EXISTS `Lesson` ("
                     + "LId varchar(10) NOT NULL,"
-                    + "sId varchar(10) NOT NULL,"
-                    + "studId varchar(10) NOT NULL,"
-                    + "attendance varchar(10) NOT NULL,"
+                    + "SubjectName varchar(10) NOT NULL,"
+                    + "tId varchar(10) NOT NULL,"
+                    + "Date date NOT NULL,"
                     + "PRIMARY KEY (LId),"
-                    + "FOREIGN KEY (studId) REFERENCES Student(studId),"
-                    + "FOREIGN KEY (sId) REFERENCES Subject(sId))";
+                    + "FOREIGN KEY (tId) REFERENCES Teacher(tId))"
+                   ;
             stmnt.execute(sql);
             
-            
-            
-            //Student study in which class.
             sql
-                    = "CREATE TABLE IF NOT EXISTS `StudClass` ("
-                    + "scId varchar(10) NOT NULL,"
-                    + "studId varchar(10) NOT NULL,"
-                    + "classId varchar(10) NOT NULL,"
-                    + "PRIMARY KEY (scId),"
-                    + "FOREIGN KEY (studId) REFERENCES Student(studId),"
-                    + "FOREIGN KEY (classId) REFERENCES Class(classId))";
-            stmnt.execute(sql);
-            
-            //may not use it
-            //student study subjects.
-            /*
-            sql
-                    = "CREATE TABLE IF NOT EXISTS `StudSubject` ("
-                    + "ssId varchar(10) NOT NULL,"
+                    = "CREATE TABLE IF NOT EXISTS `StudLesson` ("
+                    + "sLId varchar(10) NOT NULL,"
                     + "studId varchar(10) NOT NULL,"
                     + "sId varchar(10) NOT NULL,"
                     + "attendance varchar(10) NOT NULL,"
-                    + "PRIMARY KEY (ssId),"
-                    + "FOREIGN KEY (studId) REFERENCES Student(studId),"
-                    + "FOREIGN KEY (sId) REFERENCES Subject(sId));";
+                    + "PRIMARY KEY (sLId),"
+                    + "FOREIGN KEY (studId) REFERENCES Student(studId));";
             stmnt.execute(sql);
-            */
-            //teacher tutors subjects.
-            sql
-                    = "CREATE TABLE IF NOT EXISTS `TeacherSubject` ("
-                    + "ttId varchar(10) NOT NULL,"
-                    + "tId varchar(10) NOT NULL,"
-                    + "sId varchar(10) NOT NULL,"
-                    + "PRIMARY KEY (ttId),"
-                    + "FOREIGN KEY (tId) REFERENCES Teacher(tId),"
-                    + "FOREIGN KEY (sId) REFERENCES Subject(sId));";
-            stmnt.execute(sql);
-            //what classes a teacher tutors.
-            sql
-                    = "CREATE TABLE IF NOT EXISTS `TeacherClass` ("
-                    + "tcId varchar(10) NOT NULL,"
-                    + "tId varchar(10) NOT NULL,"
-                    + "classId varchar(10) NOT NULL,"
-                    + "PRIMARY KEY (tcId),"
-                    + "FOREIGN KEY (tId) REFERENCES Teacher(tId),"
-                    + "FOREIGN KEY (classId) REFERENCES Class(classId))";
-            stmnt.execute(sql);
+            
             
             stmnt.close();
             cnnct.close();
