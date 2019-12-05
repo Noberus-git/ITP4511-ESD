@@ -120,7 +120,7 @@ public class SAMSDB {
             
             //Student study in which class.
             sql
-                    = "CREATE TABLE IF NOT EXISTS `StudStudyClass` ("
+                    = "CREATE TABLE IF NOT EXISTS `StudClass` ("
                     + "scId varchar(10) NOT NULL,"
                     + "studId varchar(10) NOT NULL,"
                     + "tId varchar(10) NOT NULL,"
@@ -133,7 +133,7 @@ public class SAMSDB {
             
             //student study subjects.
             sql
-                    = "CREATE TABLE IF NOT EXISTS `StudStudySubject` ("
+                    = "CREATE TABLE IF NOT EXISTS `StudSubject` ("
                     + "ssId varchar(10) NOT NULL,"
                     + "studId varchar(10) NOT NULL,"
                     + "sId varchar(10) NOT NULL,"
@@ -145,7 +145,7 @@ public class SAMSDB {
             
             //teacher tutors subjects.
             sql
-                    = "CREATE TABLE IF NOT EXISTS `TeacherTutorSubject` ("
+                    = "CREATE TABLE IF NOT EXISTS `TeacherSubject` ("
                     + "ttId varchar(10) NOT NULL,"
                     + "tId varchar(10) NOT NULL,"
                     + "sId varchar(10) NOT NULL,"
@@ -155,7 +155,7 @@ public class SAMSDB {
             stmnt.execute(sql);
             //what classes a teacher tutors.
             sql
-                    = "CREATE TABLE IF NOT EXISTS `TeacherTutorClass` ("
+                    = "CREATE TABLE IF NOT EXISTS `TeacherClass` ("
                     + "tcId varchar(10) NOT NULL,"
                     + "tId varchar(10) NOT NULL,"
                     + "classId varchar(10) NOT NULL,"
