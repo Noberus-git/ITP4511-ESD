@@ -6,6 +6,7 @@
 package ict.servlet;
 
 import ict.bean.StudentLessonBean;
+import ict.bean.lessonBean;
 import ict.bean.scheduleBean;
 import ict.db.SAMSDB;
 import java.io.IOException;
@@ -68,6 +69,22 @@ public class handleTeacherController extends HttpServlet {
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/" + targetURL);
             rd.forward(request, response);
+        }//show lessons
+        else if (action.equals("viewLesson")) {
+            ArrayList<scheduleBean> sb;
+            
+            String tid = request.getParameter("tId");
+            sb = db.getScheduleBeanByTidToShowLesson(tid);
+            if (sb != null) {
+                out.println(sb.size());
+                request.setAttribute("ScheduleBean", sb);
+                targetURL = "viewLesson.jsp";
+            } else {
+                targetURL = "teacherIndex.jsp";
+            }
+            RequestDispatcher rd;
+            rd = getServletContext().getRequestDispatcher("/" + targetURL);
+            rd.forward(request, response);
         }// view students in the lesson
         else if (action.equals("showStudLesson")) {
             String Sid = request.getParameter("Sid"); 
@@ -78,8 +95,8 @@ public class handleTeacherController extends HttpServlet {
 
             if (sb != null) {
                 out.println(sb.size());
-                request.setAttribute("ScheduleBeans", sb);
-                targetURL = "viewSubject.jsp";
+                request.setAttribute("getStudBean", sb);
+                targetURL = "markAttendance.jsp";
             } else {
                 targetURL = "teacherIndex.jsp";
             }

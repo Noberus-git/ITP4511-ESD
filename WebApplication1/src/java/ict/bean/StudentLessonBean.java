@@ -12,11 +12,22 @@ package ict.bean;
 public class StudentLessonBean {
     String studId;
     String studName;
+    String Lid;
+    String Sid;
     
     public StudentLessonBean(){}
-    public StudentLessonBean(String studId,String studName){
+    public StudentLessonBean(String studId,String studName,String Lid,String Sid){
         this.studId=studId;
         this.studName=studName;
+        this.Lid=Lid;
+        
+    }
+    
+    public void setLid(String Lid){
+        this.Lid=Lid;
+    }
+    public void setSid(String Sid){
+        this.Sid=Sid;
     }
     
     public void setStudID(String studId){
@@ -29,8 +40,13 @@ public class StudentLessonBean {
     public String getStudID(){
         return studId;
     }
-    
+    public String getSid(){
+        return Sid;
+    }
     public String getStudName(){
         return studName;
+    }
+    public String getLid(){
+        return Lid;
     }
 }

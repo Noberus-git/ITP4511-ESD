@@ -9,7 +9,7 @@ package ict.bean;
  *
  * @author Laughing Lam
  */
-public class scheduleBean {
+public class lessonBean {
     String sid;
     String SubjectName;
     
@@ -19,28 +19,21 @@ public class scheduleBean {
     String Lid;
     String date;
 
+  
+    public lessonBean(){}
     
-    String period;
-    String weekDay;
-    public scheduleBean(){}
-    
-    public scheduleBean(String cid, String Lid, String period, String SubjectName, String sid,String className, String weekDay,String date){
+    public lessonBean(String cid, String Lid,  String SubjectName, String sid,String className ,String date){
         this.cid=cid;
         this.Lid=Lid;
-        this.period=period;
+
         this.SubjectName=SubjectName;
         this.sid=sid;
         this.className= className;
-        this.weekDay=weekDay;
+
         this.date=date;
     }
-    public void setWeekDay(String weekDay){
-       this.weekDay=weekDay;
-       
-   } 
-   public String getWeekDay(){
-       return weekDay;
-   } 
+
+   
     public void setCid(String cid){
        this.cid=cid;
        
@@ -56,13 +49,7 @@ public class scheduleBean {
    public String getLid(){
        return Lid;
    } 
-    public void setPeriod(String period){
-       this.period=period;
-       
-   } 
-   public String getPeriod(){
-       return period;
-   }
+
    public void setSubjectName(String SubjectName){
        this.SubjectName=SubjectName;
        

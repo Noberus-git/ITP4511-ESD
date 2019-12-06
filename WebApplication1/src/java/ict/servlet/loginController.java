@@ -35,10 +35,7 @@ public class loginController extends HttpServlet{
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");
         db = new SAMSDB(dbUrl,dbUser,dbPassword);
         db.createTables();
-        
-        
-        
-        
+
     }
     
     public void doPost(HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException{

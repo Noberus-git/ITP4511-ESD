@@ -6,6 +6,7 @@
 package ict.db;
 
 import ict.bean.StudentLessonBean;
+import ict.bean.lessonBean;
 import ict.bean.scheduleBean;
 import ict.bean.subjectBean;
 import ict.bean.teacherBean;
@@ -123,6 +124,7 @@ public class SAMSDB {
                     + "sId varchar(10) NOT NULL,"
                     + "SubjectName varchar(10) NOT NULL,"
                     + "tId varchar(10) NOT NULL,"
+                    
                     + "PRIMARY KEY (sId),"
                     + "FOREIGN KEY (tId) REFERENCES Teacher(tId))";
             stmnt.execute(sql);
@@ -132,8 +134,10 @@ public class SAMSDB {
                     + "LId varchar(10) NOT NULL,"
                     + "sId varchar(10) NOT NULL,"
                     + "cId varchar(10) NOT NULL,"
+                    + "period varchar(10) NOT NULL,"
+                    + "weekDay varchar(10) NOT NULL,"
                     + "Date date NOT NULL,"
-                    + "PRIMARY KEY (LId,sId),"
+                    + "PRIMARY KEY (LId,sId,cId),"
                     + "FOREIGN KEY (sId) REFERENCES Subject(sId),"
                     + "FOREIGN KEY (cId) REFERENCES Class(cId));";
             stmnt.execute(sql);
@@ -143,7 +147,7 @@ public class SAMSDB {
                     + "LId varchar(10) NOT NULL,"
                     + "studId varchar(10) NOT NULL,"
                     + "sId varchar(10) NOT NULL,"
-                    + "attendance varchar(10) NOT NULL,"
+                    + "attendance varchar(10) NULL,"
                     + "PRIMARY KEY (LId,sId,studId),"
                     +" FOREIGN KEY (LId) REFERENCES Lesson(LId),"
                     +" FOREIGN KEY (sId) REFERENCES Subject(sId),"
@@ -263,6 +267,51 @@ public class SAMSDB {
                 sb.setCid(rs.getString("cid"));
                 sb.setClassName(rs.getString("Classname"));
                 sb.setLid(rs.getString("Lid"));
+                sb.setPeriod(rs.getString("period"));
+                sb.setWeekDay(rs.getString("weekDay"));
+                sb.setSubjectName(rs.getString("SubjectName"));
+                sb.setSid(rs.getString("sId"));
+                
+
+                arrayRs.add(sb);
+            }
+            
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return arrayRs;
+    } 
+    public ArrayList getScheduleBeanByTidToShowLesson(String tid){
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        
+        ArrayList arrayRs= new ArrayList();
+        try {
+            
+            cnnct = getConnection();
+            String preQueryStatement 
+                    = "SELECT * FROM `class`, `lesson` , `teacher`,`subject` "
+                    + "WHERE `teacher`.`tId`=`subject`.`tId` AND "
+                    + "`lesson`.`sId`=`subject`.`sId` AND"
+                    + " `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`=1 ;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            
+            ResultSet rs = pStmnt.executeQuery();
+            
+
+            while (rs.next()) {
+                scheduleBean sb= new scheduleBean();
+                // set the record detail to the customer bean
+                sb.setCid(rs.getString("cid"));
+                sb.setClassName(rs.getString("Classname"));
+                sb.setLid(rs.getString("Lid"));
                 sb.setDate(rs.getString("Date"));
                 sb.setSubjectName(rs.getString("SubjectName"));
                 sb.setSid(rs.getString("sId"));
@@ -281,6 +330,49 @@ public class SAMSDB {
             ex.printStackTrace();
         }
         return arrayRs;
+//        Connection cnnct = null;
+//        PreparedStatement pStmnt = null;
+//        
+//        ArrayList arrayRs= new ArrayList();
+//        try {
+//            
+//            cnnct = getConnection();
+//            String preQueryStatement 
+//                    = "SELECT * FROM `class`, `lesson` , `teacher`,`subject` "
+//                    + "WHERE `teacher`.`tId`=`subject`.`tId` AND "
+//                    + "`lesson`.`sId`=`subject`.`sId` AND"
+//                    + " `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`=1 ;";
+//            pStmnt = cnnct.prepareStatement(preQueryStatement);
+//            
+//            ResultSet rs = pStmnt.executeQuery();
+//            
+//
+//            while (rs.next()) {
+//                lessonBean lb= new lessonBean();
+//                // set the record detail to the customer bean
+//                
+//                
+//                lb.setCid(rs.getString("cid"));
+//                lb.setClassName(rs.getString("Classname"));
+//                lb.setLid(rs.getString("Lid"));
+//                lb.setDate(rs.getString("Date"));
+//                lb.setSubjectName(rs.getString("SubjectName"));
+//                lb.setSid(rs.getString("sId"));
+//
+//                arrayRs.add(lb);
+//            }
+//            
+//            pStmnt.close();
+//            cnnct.close();
+//        } catch (SQLException ex) {
+//            while (ex != null) {
+//                ex.printStackTrace();
+//                ex = ex.getNextException();
+//            }
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//        return arrayRs;
     } 
     public ArrayList getSubjectBeanByTid(String tid){
         Connection cnnct = null;
@@ -342,9 +434,10 @@ public class SAMSDB {
             while (rs.next()) {
                 StudentLessonBean sb= new StudentLessonBean();
                 // set the record detail to the customer bean
-                sb.setStudID(rs.getString("sId"));
+                sb.setStudID(rs.getString("studId"));
                 sb.setStudName(rs.getString("name"));
-                
+                sb.setLid(Lid);
+                sb.setSid(Sid);
                 arrayRs.add(sb);
             }
             pStmnt.close();
@@ -360,4 +453,80 @@ public class SAMSDB {
         return arrayRs;
     } 
     
+    public boolean makeAttendance(String Sid, String Lid, String studId){
+        
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        boolean isSuccess = false;
+        
+        try {
+            
+            cnnct = getConnection();
+            //update studLesson table to take student's attendance
+            String preQueryStatement
+                    = "Update `studlesson` set `attendance`='1' "
+                    + "where Lid=? and Sid=? and studId=?;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            
+            pStmnt.setString(1, Lid);
+            pStmnt.setString(2, Sid);
+            pStmnt.setString(3, studId);
+           
+            
+            
+            int rowCount = pStmnt.executeUpdate();
+            if (rowCount >= 1) {
+                isSuccess = true;
+            }
+            
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return isSuccess;
+    }
+    public boolean cancelAttendance(String Sid, String Lid, String studId){
+        
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        boolean isSuccess = false;
+        
+        try {
+            
+            cnnct = getConnection();
+            //update studLesson table to take student's attendance
+            String preQueryStatement
+                    = "Update `studlesson` set `attendance`='0' "
+                    + "where Lid=? and Sid=? and studId=?;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            
+            pStmnt.setString(1, Lid);
+            pStmnt.setString(2, Sid);
+            pStmnt.setString(3, studId);
+           
+            
+            
+            int rowCount = pStmnt.executeUpdate();
+            if (rowCount >= 1) {
+                isSuccess = true;
+            }
+            
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return isSuccess;
+    }
 }

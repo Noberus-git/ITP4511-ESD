@@ -15,33 +15,59 @@
     </head>
     <body>
         <h1>Class schedule</h1>
-        
+
         <%
             ArrayList<scheduleBean> sbs = (ArrayList<scheduleBean>) request.getAttribute("ScheduleBeans");
-            
-            out.println("<table border='1' >");
-            out.println("<tr>");
-            out.println("<th> Lid</th> <th> Subject name</th><th> Class name</th ><th> Date</th><th> Mark attendance</th>");
-            out.println("</tr>");
-// loop through the customer array to display each customer record
 
+            //class schudle design
+            //setup data
+            String[] days = {"Time", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+            String[] time = {"8-10", "10-12", "13-15", "15-17"};
+            String[] timeIndex={"1","2","3","4"};
+            String[][] storeLesson = new String[4][5];
+
+            
             for (int i = 0; i < sbs.size(); i++) {
                 scheduleBean sb = sbs.get(i);
-                out.println("<tr>");
-                out.println("<td>" + sb.getLid() + "</td>");
-                out.println("<td>" + sb.getSubjectName() + "</td>");
+                int placeWeekDay = 0;
+                int placePeriod = Integer.parseInt(sb.getPeriod())-1;
+
                 
-                out.println("<td>" + sb.getClassName() + "</td>");
-                out.println("<td>" + sb.getDate() + "</td>");
-                out.println("<td>" + "<a href='handleTeacherController?action=showStudLesson&Lid="+sb.getLid()+"&Sid="+sb.getSid()+"&Cid="+sb.getCid()+"'>View Classmates</a>"  + "</td>");
+                for (int j = 0; j < 5; j++) {
+                    if (sb.getWeekDay().equals(days[j + 1])) {
+
+                        placeWeekDay = j;
+                        
+                    }
+                }
+ 
+                storeLesson[placePeriod][placeWeekDay] = sb.getSubjectName() + "(" + sb.getClassName() + ")";
+
+            }
+
+            out.println("<table border='1' >");
+            out.println("<tr>");
+            for (int i = 0; i < days.length; i++) {
+                out.println("<th>" + days[i] + "</th>");
+            }
+            out.println("</tr>");
+
+            for (int i = 0; i < 4; i++) {
+                //scheduleBean sb = sbs.get(i);
+                out.println("<tr>");
+                out.println("<td>" + time[i] + "</td>");
+                out.println("<td>" + storeLesson[i][0] + "</td>");
+                out.println("<td>" + storeLesson[i][1] + "</td>");
+                out.println("<td>" + storeLesson[i][2] + "</td>");
+                out.println("<td>" + storeLesson[i][3] + "</td>");
+                out.println("<td>" + storeLesson[i][4] + "</td>");
                 out.println("</tr>");
             }
 
             out.println("</table>");
-            
 
         %>
-        
-    
+
+
     </body>
 </html>
