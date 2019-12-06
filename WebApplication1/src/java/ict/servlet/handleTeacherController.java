@@ -5,6 +5,7 @@
  */
 package ict.servlet;
 
+import ict.bean.StudentLessonBean;
 import ict.bean.scheduleBean;
 import ict.db.SAMSDB;
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class handleTeacherController extends HttpServlet {
         String action = request.getParameter("action");
         PrintWriter out = response.getWriter();
         out.println(action);
-
+        //view class schedule
         if (action.equals("viewSchedule")) {
             ArrayList<scheduleBean> sb;
             String tid = request.getParameter("tId");
@@ -67,22 +68,24 @@ public class handleTeacherController extends HttpServlet {
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/" + targetURL);
             rd.forward(request, response);
-        }
-        if (action.equals("viewSubject")) {
-            ArrayList<scheduleBean> sb;
-            String tid = request.getParameter("tId");
-            sb = db.getScheduleBeanByTid(tid);
+        }// view students in the lesson
+        else if (action.equals("showStudLesson")) {
+            String Sid = request.getParameter("Sid"); 
+            String Lid = request.getParameter("Lid"); 
+            String CId = request.getParameter("CId"); 
+            
+            ArrayList<StudentLessonBean> sb=db.getStudBean(Lid, Sid, CId);
+
             if (sb != null) {
                 out.println(sb.size());
                 request.setAttribute("ScheduleBeans", sb);
-                targetURL = "classSchedule.jsp";
+                targetURL = "viewSubject.jsp";
             } else {
                 targetURL = "teacherIndex.jsp";
             }
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/" + targetURL);
-            rd.forward(request, response);
-
+            //rd.forward(request, response);
         }
 
     }

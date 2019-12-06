@@ -21,18 +21,19 @@
             
             out.println("<table border='1' >");
             out.println("<tr>");
-            out.println("<th>Sid</th> <th> Subject name</th><th> Lid</th><th> Class name</th ><th> Date</th>");
+            out.println("<th> Lid</th> <th> Subject name</th><th> Class name</th ><th> Date</th><th> Mark attendance</th>");
             out.println("</tr>");
 // loop through the customer array to display each customer record
 
             for (int i = 0; i < sbs.size(); i++) {
                 scheduleBean sb = sbs.get(i);
                 out.println("<tr>");
-                out.println("<td>" + sb.getSid() + "</td>");
-                out.println("<td>" + sb.getSubjectName() + "</td>");
                 out.println("<td>" + sb.getLid() + "</td>");
+                out.println("<td>" + sb.getSubjectName() + "</td>");
+                
                 out.println("<td>" + sb.getClassName() + "</td>");
                 out.println("<td>" + sb.getDate() + "</td>");
+                out.println("<td>" + "<a href='handleTeacherController?action=showStudLesson&Lid="+sb.getLid()+"&Sid="+sb.getSid()+"&Cid="+sb.getCid()+"'>View Classmates</a>"  + "</td>");
                 out.println("</tr>");
             }
 
@@ -40,5 +41,7 @@
             
 
         %>
+        
+    
     </body>
 </html>

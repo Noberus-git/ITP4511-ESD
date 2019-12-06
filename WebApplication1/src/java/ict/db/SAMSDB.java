@@ -5,7 +5,9 @@
  */
 package ict.db;
 
+import ict.bean.StudentLessonBean;
 import ict.bean.scheduleBean;
+import ict.bean.subjectBean;
 import ict.bean.teacherBean;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -280,4 +282,82 @@ public class SAMSDB {
         }
         return arrayRs;
     } 
+    public ArrayList getSubjectBeanByTid(String tid){
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        
+        ArrayList arrayRs= new ArrayList();
+        try {
+            
+            cnnct = getConnection();
+            String preQueryStatement 
+                    = "SELECT * FROM `subject` "
+                    + "WHERE  `subject`.`tId`="+tid+" ;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            
+            ResultSet rs = pStmnt.executeQuery();
+            
+
+            while (rs.next()) {
+                subjectBean sb= new subjectBean();
+                // set the record detail to the customer bean
+                sb.setTid(rs.getString("tId"));
+                sb.setSubjectName(rs.getString("SubjectName"));
+                sb.setSid(rs.getString("sId"));
+                
+
+                arrayRs.add(sb);
+            }
+            
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return arrayRs;
+    } 
+    
+    public ArrayList getStudBean(String Lid,String Sid, String Cid){
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        
+        ArrayList arrayRs= new ArrayList();
+        try {
+            
+            cnnct = getConnection();
+            String preQueryStatement 
+                    = "SELECT * FROM `studlesson`, `Student` "
+                    + "WHERE  `student`.`studId`=`studlesson`.`studId` and `studlesson`.`Sid`="+Sid
+                    +" And `studlesson`.`Lid`="+ Lid+" ;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            
+            ResultSet rs = pStmnt.executeQuery();
+            
+
+            while (rs.next()) {
+                StudentLessonBean sb= new StudentLessonBean();
+                // set the record detail to the customer bean
+                sb.setStudID(rs.getString("sId"));
+                sb.setStudName(rs.getString("name"));
+                
+                arrayRs.add(sb);
+            }
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return arrayRs;
+    } 
+    
 }

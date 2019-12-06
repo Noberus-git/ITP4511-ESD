@@ -30,7 +30,7 @@ public class scheduleBean {
         this.className= className;
         
     }
-    public void setCid(String tid){
+    public void setCid(String cid){
        this.cid=cid;
        
    } 
