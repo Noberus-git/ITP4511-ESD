@@ -14,8 +14,15 @@
     <body>
         <form action="loginController" method="post">
             <input type="hidden" name="action" value="login">
+            <br>
+            Username:
             <input type="text" name="username" value="">
-            <br><br><input type="text" name="password" value="">
+            <br><br>Password:
+            <input type="text" name="password" value="">
+            <br><br>Log in as: <br>
+            Student<input type="radio" name="userType" value="student">
+            Teacher<input type="radio" name="userType" value="teacher">
+            Admin<input type="radio" name="userType" value="admin">
             <br><br><input type="submit" value="Log in">
         </form>
     </body>

@@ -6,6 +6,7 @@
 package ict.db;
 
 import ict.bean.StudentLessonBean;
+import ict.bean.adminBean;
 import ict.bean.lessonBean;
 import ict.bean.scheduleBean;
 import ict.bean.subjectBean;
@@ -203,6 +204,41 @@ public class SAMSDB {
         }
         return isSuccess;
     }
+    public boolean adminLoginIsValid(String aId, String password) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        boolean isSuccess = false;
+        
+        try {
+            //get max sid
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM  `admin` where aId=? and password=?;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //3. update the placehoder with id
+            pStmnt.setString(1, aId);
+            pStmnt.setString(2, password);
+            
+            ResultSet rs = null;
+            //4. execute the query and assign to the result 
+            rs = pStmnt.executeQuery();
+            
+            if (rs.next()) {
+                // set the record detail to the customer bean
+                isSuccess=true;
+            }
+            
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return isSuccess;
+    }
     
     public teacherBean getteacherBeanByTid(String tid){
         Connection cnnct = null;
@@ -239,8 +275,43 @@ public class SAMSDB {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return tb;
-                
+        return tb;          
+    }
+    
+    public adminBean getAdminBeanByaId(String tid){
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        adminBean ab= new adminBean();
+        
+        try {
+            //get max sid
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM  `admin` where aId=?;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //3. update the placehoder with id
+            pStmnt.setString(1, tid);
+            
+            ResultSet rs = null;
+            //4. execute the query and assign to the result 
+            rs = pStmnt.executeQuery();
+
+            if (rs.next()) {
+                // set the record detail to the customer bean
+                ab.setaId(rs.getString(1));
+                ab.setName(rs.getString(2));
+            }
+            
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return ab;          
     }
     
     public ArrayList getScheduleBeanByTid(String tid){
