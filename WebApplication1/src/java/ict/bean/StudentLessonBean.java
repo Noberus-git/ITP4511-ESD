@@ -14,15 +14,21 @@ public class StudentLessonBean {
     String studName;
     String Lid;
     String Sid;
+    String Attendance;
     
     public StudentLessonBean(){}
-    public StudentLessonBean(String studId,String studName,String Lid,String Sid){
+    public StudentLessonBean(String studId,String studName,String Lid,String Sid,String Attendance){
         this.studId=studId;
         this.studName=studName;
         this.Lid=Lid;
-        
+        this.Attendance=Attendance;
     }
-    
+    public String getAttendance(){
+        return Attendance;
+    }
+    public void setAttendance(String Attendance){
+        this.Attendance=Attendance;
+    }
     public void setLid(String Lid){
         this.Lid=Lid;
     }

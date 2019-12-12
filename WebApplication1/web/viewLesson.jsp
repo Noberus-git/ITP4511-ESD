@@ -33,7 +33,7 @@
                 
                 out.println("<td>" + sb.getClassName() + "</td>");
                 out.println("<td>" + sb.getDate() + "</td>");
-                out.println("<td>" + "<a href='handleTeacherController?action=showStudLesson&Lid="+sb.getLid()+"&Sid="+sb.getSid()+"&Cid="+sb.getCid()+"'>View Class</a>"  + "</td>");
+                out.println("<td>" + "<a href='handleTeacherController?action=showStudLesson&Lid="+sb.getLid()+"&Sid="+sb.getSid()+"&cid="+sb.getCid()+"'>View/Edit Class</a>"  + "</td>");
                 out.println("</tr>");
             }
 

@@ -52,16 +52,31 @@ public class insertEditAttendanceController extends HttpServlet {
         
         out.println(action);
         if(action.equals("markAttendance")){
-           String[] ArrivedStudents= request.getParameterValues("attandance");
+           String[] getStudentsID= request.getParameterValues("studID");
+           //String[] ArrivedStudents= request.getParameterValues("attandance");
            String Sid= request.getParameter("Sid");
            String Lid= request.getParameter("Lid");
            
-           for(int i=0; i<ArrivedStudents.length;i++){
-              db.makeAttendance(Lid,Sid,ArrivedStudents[i]);
+           for(int i=0; i<getStudentsID.length;i++){
+              String studStatic= request.getParameter("attandance"+i);
+              out.println("\n StudentID :"+getStudentsID[i]);
+              out.println("\n Attendance :"+studStatic);
+              boolean updateTabledb=false;
+              if(studStatic.equals("1")){
+                updateTabledb=db.makeAttendance(Lid,Sid,getStudentsID[i]);
+ 
+              }else if(studStatic.equals("0")){
+                updateTabledb=db.cancelAttendance(Lid,Sid,getStudentsID[i]);
+              }
               
+              if(updateTabledb){
+                    out.println("\n Attendance is taken");
+              }else{
+                  out.println("\n Attendance do not been taken");
+              }
            }
            String targetURL = "teacherIndex.jsp";
-           RequestDispatcher rd;
+            RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/" + targetURL);
             rd.forward(request, response);
         }

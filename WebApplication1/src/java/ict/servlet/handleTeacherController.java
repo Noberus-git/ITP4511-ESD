@@ -52,13 +52,21 @@ public class handleTeacherController extends HttpServlet {
 
         String targetURL;
         String action = request.getParameter("action");
+        String tid = request.getParameter("tid");
+        
+        
         PrintWriter out = response.getWriter();
+        out.println("Tid: "+tid);
         out.println(action);
         //view class schedule
         if (action.equals("viewSchedule")) {
             ArrayList<scheduleBean> sb;
-            String tid = request.getParameter("tId");
+            
+            
             sb = db.getScheduleBeanByTid(tid);
+            
+            
+            
             if (sb != null) {
                 out.println(sb.size());
                 request.setAttribute("ScheduleBeans", sb);
@@ -69,11 +77,12 @@ public class handleTeacherController extends HttpServlet {
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/" + targetURL);
             rd.forward(request, response);
-        }//show lessons
+        }
+        
+        //show all lessons teacher need to teach
         else if (action.equals("viewLesson")) {
             ArrayList<scheduleBean> sb;
             
-            String tid = request.getParameter("tId");
             sb = db.getScheduleBeanByTidToShowLesson(tid);
             if (sb != null) {
                 out.println(sb.size());
@@ -85,14 +94,15 @@ public class handleTeacherController extends HttpServlet {
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/" + targetURL);
             rd.forward(request, response);
-        }// view students in the lesson
+        }
+        // view students;s attendance in the lesson
         else if (action.equals("showStudLesson")) {
             String Sid = request.getParameter("Sid"); 
             String Lid = request.getParameter("Lid"); 
-            String CId = request.getParameter("CId"); 
+            String  cid= request.getParameter("cid"); 
+            out.println("Cid: "+cid+"\n");
+            ArrayList<StudentLessonBean> sb=db.getStudBean(Lid, Sid, cid);
             
-            ArrayList<StudentLessonBean> sb=db.getStudBean(Lid, Sid, CId);
-
             if (sb != null) {
                 out.println(sb.size());
                 request.setAttribute("getStudBean", sb);
@@ -102,7 +112,7 @@ public class handleTeacherController extends HttpServlet {
             }
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/" + targetURL);
-            //rd.forward(request, response);
+            rd.forward(request, response);
         }
 
     }
