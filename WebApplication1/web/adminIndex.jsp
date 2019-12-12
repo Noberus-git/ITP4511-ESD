@@ -12,8 +12,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <jsp:useBean id="ab" class="ict.bean.adminBean" scope="session" />
+        <jsp:useBean id="adminBean" class="ict.bean.adminBean" scope="session"/>
         Welcome
-        <jsp:getProperty name="ab" property="name" /> <br>    
+        <jsp:getProperty name="adminBean" property="name" /> <br>    
     </body>
 </html>
