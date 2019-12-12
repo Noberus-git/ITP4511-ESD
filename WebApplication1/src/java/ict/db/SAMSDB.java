@@ -6,6 +6,7 @@
 package ict.db;
 
 import ict.bean.StudentLessonBean;
+import ict.bean.SubjectClassReportBean;
 import ict.bean.adminBean;
 import ict.bean.lessonBean;
 import ict.bean.scheduleBean;
@@ -203,11 +204,12 @@ public class SAMSDB {
         }
         return isSuccess;
     }
+
     public boolean adminLoginIsValid(String aId, String password) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
         boolean isSuccess = false;
-        
+
         try {
             //get max sid
             cnnct = getConnection();
@@ -216,16 +218,16 @@ public class SAMSDB {
             //3. update the placehoder with id
             pStmnt.setString(1, aId);
             pStmnt.setString(2, password);
-            
+
             ResultSet rs = null;
             //4. execute the query and assign to the result 
             rs = pStmnt.executeQuery();
-            
+
             if (rs.next()) {
                 // set the record detail to the customer bean
-                isSuccess=true;
+                isSuccess = true;
             }
-            
+
             pStmnt.close();
             cnnct.close();
         } catch (SQLException ex) {
@@ -238,8 +240,8 @@ public class SAMSDB {
         }
         return isSuccess;
     }
-    
-    public teacherBean getteacherBeanByTid(String tid){
+
+    public teacherBean getteacherBeanByTid(String tid) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
         teacherBean tb = new teacherBean();
@@ -273,14 +275,14 @@ public class SAMSDB {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return tb;          
+        return tb;
     }
-    
-    public adminBean getAdminBeanByaId(String tid){
+
+    public adminBean getAdminBeanByaId(String tid) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
-        adminBean ab= new adminBean();
-        
+        adminBean ab = new adminBean();
+
         try {
             //get max sid
             cnnct = getConnection();
@@ -288,7 +290,7 @@ public class SAMSDB {
             pStmnt = cnnct.prepareStatement(preQueryStatement);
             //3. update the placehoder with id
             pStmnt.setString(1, tid);
-            
+
             ResultSet rs = null;
             //4. execute the query and assign to the result 
             rs = pStmnt.executeQuery();
@@ -298,7 +300,7 @@ public class SAMSDB {
                 ab.setaId(rs.getString(1));
                 ab.setName(rs.getString(2));
             }
-            
+
             pStmnt.close();
             cnnct.close();
         } catch (SQLException ex) {
@@ -309,7 +311,7 @@ public class SAMSDB {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return ab;          
+        return ab;
     }
     // use it to show class schedule
 
@@ -325,7 +327,7 @@ public class SAMSDB {
                     = "SELECT * FROM `class`, `lesson` , `teacher`,`subject` "
                     + "WHERE `teacher`.`tId`=`subject`.`tId` AND "
                     + "`lesson`.`sId`=`subject`.`sId` AND"
-                    + " `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`="+tid+" ;";
+                    + " `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`=" + tid + " ;";
             pStmnt = cnnct.prepareStatement(preQueryStatement);
 
             ResultSet rs = pStmnt.executeQuery();
@@ -356,8 +358,7 @@ public class SAMSDB {
         }
         return arrayRs;
     }
-    
-    
+
 //show lesson you have and the lesson detail
     public ArrayList getScheduleBeanByTidToShowLesson(String tid) {
         Connection cnnct = null;
@@ -371,8 +372,8 @@ public class SAMSDB {
                     = "SELECT * FROM `class`, `lesson` , `teacher`,`subject` "
                     + "WHERE `teacher`.`tId`=`subject`.`tId` AND "
                     + "`lesson`.`sId`=`subject`.`sId` AND"
-                    + " `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`= "+tid+";";
-            
+                    + " `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`= " + tid + ";";
+
             pStmnt = cnnct.prepareStatement(preQueryStatement);
 
             ResultSet rs = pStmnt.executeQuery();
@@ -454,7 +455,7 @@ public class SAMSDB {
             String preQueryStatement
                     = "SELECT * FROM `studlesson`, `Student` "
                     + "WHERE  `student`.`studId`=`studlesson`.`studId` and `studlesson`.`Sid`=" + Sid
-                    + " And `studlesson`.`Lid`=" + Lid + " And `student`.`cId`="+cid+"";
+                    + " And `studlesson`.`Lid`=" + Lid + " And `student`.`cId`=" + cid + "";
             pStmnt = cnnct.prepareStatement(preQueryStatement);
 
             ResultSet rs = pStmnt.executeQuery();
@@ -482,8 +483,6 @@ public class SAMSDB {
         return arrayRs;
     }
 
-    
-    
     // CURD => U
     public boolean makeAttendance(String Sid, String Lid, String studId) {
         Connection cnnct = null;
@@ -494,16 +493,9 @@ public class SAMSDB {
             //update studLesson table to take student's attendance
             String preQueryStatement
                     = "Update `studlesson` set `attendance`='1' "
-                    + "where Lid=? and Sid=? and studId=?;";
+                    + "where LId="+Lid+" and sId="+Sid+" and studId="+studId+";";
             pStmnt = cnnct.prepareStatement(preQueryStatement);
             
-            pStmnt.setString(1, Lid);
-            pStmnt.setString(2, Sid);
-            pStmnt.setString(3, studId);
-//            pStmnt.setString(1, Lid);
-//            pStmnt.setString(2, Sid);
-//            pStmnt.setString(3, studId);
-
             int rowCount = pStmnt.executeUpdate();
             if (rowCount >= 1) {
                 isSuccess = true;
@@ -558,4 +550,102 @@ public class SAMSDB {
         }
         return isSuccess;
     }
+    
+    
+
+    public ArrayList showAllClassbytid(String tid) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+
+        ArrayList arrayRs = new ArrayList();
+        try {
+
+            cnnct = getConnection();
+            String preQueryStatement
+                    = "SELECT DISTINCT(`subject`.`sId`),`cId`,`Classname`,`SubjectName` FROM `class`, `lesson` , `teacher`,`subject`"
+                     + "WHERE `teacher`.`tId`=`subject`.`tId` AND `lesson`.`sId`=`subject`.`sId` AND `class`.`cId`= `Lesson`.`cId`  AND `teacher`.`tId`= "+tid+";";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+
+            ResultSet rs = pStmnt.executeQuery();
+
+            while (rs.next()) {
+                SubjectClassReportBean sb = new SubjectClassReportBean();
+                // set the record detail to the customer bean
+                sb.setClassID(rs.getString("cId"));
+                sb.setSid(rs.getString("sId"));
+                sb.setClassName(rs.getString("Classname"));
+                sb.setSubjectName(rs.getString("SubjectName"));
+                int rsAttendance=0;
+                rsAttendance=calculateAttendance(rs.getString("sId"),rs.getString("cId"),tid);
+                sb.setAttendance(rsAttendance);
+                arrayRs.add(sb);
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return arrayRs;
+    }
+
+    public int calculateAttendance(String Sid, String cid, String tid) {
+
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        int classPercent = 0;
+        int maxStudentNo = 0;
+        int arriveStudentNo = 0;
+
+        try {
+            //get max stud
+            //SELECT * FROM `teacher`,`subject`,`studlesson`,`student` WHERE `teacher`.`tId`= `subject`.`tId` AND `student`.`studId`=`studlesson`.`studId`and `teacher`.`tId`= 1 AND `studlesson`.`sId`=1 and `student`.`cId`=1;
+            cnnct = getConnection();
+            //update studLesson table to take student's attendance
+            String preQueryStatement
+                    = "SELECT Count(*) FROM `teacher`,`subject`,`studlesson`,`student` "
+                    + "WHERE `teacher`.`tId`= `subject`.`tId` AND `student`.`studId`=`studlesson`.`studId`"
+                    + "and `teacher`.`tId`= " + tid + " AND `studlesson`.`sId`=" + Sid + " and `student`.`cId`=" + cid + ";";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+
+            ResultSet rs = pStmnt.executeQuery();
+
+            //get maxStudentno
+            maxStudentNo = Integer.parseInt(rs.getString("Count(*)"));
+
+            preQueryStatement
+                    = "SELECT Count(*) FROM `teacher`,`subject`,`studlesson`,`student` "
+                    + "WHERE `teacher`.`tId`= `subject`.`tId` AND `student`.`studId`=`studlesson`.`studId`"
+                    + "and `teacher`.`tId`= " + tid + " AND `studlesson`.`sId`=" + Sid + " and `student`.`cId`=" + cid + " AND `studlesson`.`attendance`='1' ;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+
+            ResultSet rs2 = pStmnt.executeQuery();
+            arriveStudentNo = Integer.parseInt(rs2.getString("Count(*)"));
+            //get arrive studentno
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        if (maxStudentNo == 0) {
+            return classPercent;
+
+        } else {
+            classPercent = 100 * arriveStudentNo / maxStudentNo;
+        }
+        return classPercent;
+    }
+
 }

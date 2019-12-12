@@ -6,6 +6,7 @@
 package ict.servlet;
 
 import ict.bean.StudentLessonBean;
+import ict.bean.SubjectClassReportBean;
 import ict.bean.lessonBean;
 import ict.bean.scheduleBean;
 import ict.db.SAMSDB;
@@ -102,12 +103,33 @@ public class handleTeacherController extends HttpServlet {
             String  cid= request.getParameter("cid"); 
             out.println("Cid: "+cid+"\n");
             ArrayList<StudentLessonBean> sb=db.getStudBean(Lid, Sid, cid);
-            
-            if (sb != null) {
-                out.println(sb.size());
+            out.println("bean size :"+sb.size());
+            if (sb.size() !=0 ) {
+                
                 request.setAttribute("getStudBean", sb);
                 targetURL = "markAttendance.jsp";
             } else {
+                targetURL = "teacherIndex.jsp";
+            }
+            RequestDispatcher rd;
+            rd = getServletContext().getRequestDispatcher("/" + targetURL);
+            rd.forward(request, response);
+        }
+        //Show report
+        else if (action.equals("generateReport")) {
+           
+            ArrayList<SubjectClassReportBean> scrb;
+            
+            scrb=db.showAllClassbytid(tid);
+            
+            out.println("scrb:"+scrb.size());
+            
+            if (scrb != null) {
+                
+                request.setAttribute("getscrb", scrb);
+                targetURL = "showClass.jsp";
+            } else {
+                
                 targetURL = "teacherIndex.jsp";
             }
             RequestDispatcher rd;

@@ -34,23 +34,20 @@
         
             for (int i = 0; i < studlbs.size(); i++) {
                 
-                StudentLessonBean sb = studlbs.get(i);
+               StudentLessonBean sb = studlbs.get(i);
                 String arrive="";
                 String abs="";
                 
-                if(sb.getAttendance().equals("1")){
+                if(sb.getAttendance()==null){
+                    
+                    
+                }else if(sb.getAttendance().equals("1")){
                     arrive="checked";
-                }
-                
-                if(sb.getAttendance().equals("0")){
+                }else if(sb.getAttendance().equals("0")){
                     abs="checked";
                 }
-                
-                 
-                
-                
-             
-                out.println("<tr>");
+         
+               out.println("<tr>");
                 out.println("<td>" + sb.getStudID() + "</td>");
                 out.println("<td>" + sb.getStudName() + "</td>");
                 out.println("<td>" +  "<input type='radio' name='attandance"+i+"' value='1'"+arrive+">" 
