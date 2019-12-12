@@ -15,5 +15,6 @@
         <jsp:useBean id="adminBean" class="ict.bean.adminBean" scope="session"/>
         Welcome
         <jsp:getProperty name="adminBean" property="name" /> <br>    
+        123
     </body>
 </html>
