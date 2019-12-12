@@ -526,12 +526,10 @@ public class SAMSDB {
             //update studLesson table to take student's attendance
             String preQueryStatement
                     = "Update `studlesson` set `attendance`='0' "
-                    + "where Lid=? and Sid=? and studId=?;";
+                    + "where LId="+Lid+" and sId="+Sid+" and studId="+studId+";";
             pStmnt = cnnct.prepareStatement(preQueryStatement);
 
-            pStmnt.setString(1, Lid);
-            pStmnt.setString(2, Sid);
-            pStmnt.setString(3, studId);
+
 
             int rowCount = pStmnt.executeUpdate();
             if (rowCount >= 1) {

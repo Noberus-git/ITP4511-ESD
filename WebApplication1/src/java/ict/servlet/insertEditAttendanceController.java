@@ -68,7 +68,7 @@ public class insertEditAttendanceController extends HttpServlet {
                 updateTabledb=db.makeAttendance(Sid,Lid,getStudentsID[i]);
                 
               }else if(studStatic.equals("0")){
-                updateTabledb=db.cancelAttendance(Sid,Sid,getStudentsID[i]);
+                updateTabledb=db.cancelAttendance(Sid,Lid,getStudentsID[i]);
               }
               
               if(updateTabledb){
