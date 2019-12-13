@@ -434,6 +434,56 @@ public class SAMSDB {
 
     }
 
+    public ArrayList getScheduleBeanByTidAndCidAndSiDToShowLesson(String tid, String cid,String sid) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+
+        ArrayList arrayRs = new ArrayList();
+        try {
+
+            cnnct = getConnection();
+            String preQueryStatement
+                    
+                    = "SELECT * FROM `class`, `lesson` , `teacher`,`subject` \n"
+                    + "                    WHERE `teacher`.`tId`=`subject`.`tId` AND \n"
+                    + "                    `lesson`.`sId`=`subject`.`sId` AND\n"
+                    + "                     `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`=  "+tid+" \n"
+                    + "                    And `class`.`cId`="+cid+" AND `subject`.`sId`="+sid+";" ;
+            
+
+
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+
+            ResultSet rs = pStmnt.executeQuery();
+
+            while (rs.next()) {
+                scheduleBean sb = new scheduleBean();
+                // set the record detail to the customer bean
+                sb.setCid(rs.getString("cid"));
+                
+                sb.setClassName(rs.getString("Classname"));
+                sb.setLid(rs.getString("Lid"));
+               
+                sb.setSubjectName(rs.getString("SubjectName"));
+                sb.setSid(rs.getString("sId"));
+
+                arrayRs.add(sb);
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return arrayRs;
+
+    }
+
     public ArrayList getSubjectBeanByTid(String tid) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
@@ -522,9 +572,9 @@ public class SAMSDB {
             //update studLesson table to take student's attendance
             String preQueryStatement
                     = "Update `studlesson` set `attendance`='1' "
-                    + "where LId="+Lid+" and sId="+Sid+" and studId="+studId+";";
+                    + "where LId=" + Lid + " and sId=" + Sid + " and studId=" + studId + ";";
             pStmnt = cnnct.prepareStatement(preQueryStatement);
-            
+
             int rowCount = pStmnt.executeUpdate();
             if (rowCount >= 1) {
                 isSuccess = true;
@@ -555,10 +605,8 @@ public class SAMSDB {
             //update studLesson table to take student's attendance
             String preQueryStatement
                     = "Update `studlesson` set `attendance`='0' "
-                    + "where LId="+Lid+" and sId="+Sid+" and studId="+studId+";";
+                    + "where LId=" + Lid + " and sId=" + Sid + " and studId=" + studId + ";";
             pStmnt = cnnct.prepareStatement(preQueryStatement);
-
-
 
             int rowCount = pStmnt.executeUpdate();
             if (rowCount >= 1) {
@@ -577,8 +625,6 @@ public class SAMSDB {
         }
         return isSuccess;
     }
-    
-    
 
     public ArrayList showAllClassbytid(String tid) {
         Connection cnnct = null;
@@ -590,7 +636,7 @@ public class SAMSDB {
             cnnct = getConnection();
             String preQueryStatement
                     = "SELECT DISTINCT(`subject`.`sId`),`cId`,`Classname`,`SubjectName` FROM `class`, `lesson` , `teacher`,`subject`"
-                     + "WHERE `teacher`.`tId`=`subject`.`tId` AND `lesson`.`sId`=`subject`.`sId` AND `class`.`cId`= `Lesson`.`cId`  AND `teacher`.`tId`= "+tid+";";
+                    + "WHERE `teacher`.`tId`=`subject`.`tId` AND `lesson`.`sId`=`subject`.`sId` AND `class`.`cId`= `Lesson`.`cId`  AND `teacher`.`tId`= " + tid + ";";
             pStmnt = cnnct.prepareStatement(preQueryStatement);
 
             ResultSet rs = pStmnt.executeQuery();
@@ -602,8 +648,8 @@ public class SAMSDB {
                 sb.setSid(rs.getString("sId"));
                 sb.setClassName(rs.getString("Classname"));
                 sb.setSubjectName(rs.getString("SubjectName"));
-                int rsAttendance=0;
-                rsAttendance=calculateAttendance(rs.getString("sId"),rs.getString("cId"),tid);
+                int rsAttendance = 0;
+                rsAttendance = calculateAttendance(rs.getString("sId"), rs.getString("cId"), tid);
                 sb.setAttendance(rsAttendance);
                 arrayRs.add(sb);
             }

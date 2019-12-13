@@ -80,7 +80,7 @@ public class insertEditAttendanceController extends HttpServlet {
            String targetURL = "teacherIndex.jsp";
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/" + targetURL);
-            //rd.forward(request, response);
+            rd.forward(request, response);
         }
         
     }
