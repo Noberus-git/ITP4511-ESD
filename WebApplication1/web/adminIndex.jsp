@@ -15,6 +15,8 @@
         <jsp:useBean id="adminBean" class="ict.bean.adminBean" scope="session"/>
         Welcome
         <jsp:getProperty name="adminBean" property="name" /> <br>    
-        123
+        
+        <!--Function 1: create account -->
+        <a href="handleAdminController?action=createAccount" >Create account</a>
     </body>
 </html>

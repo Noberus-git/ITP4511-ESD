@@ -5,8 +5,10 @@
  */
 package ict.servlet;
 
+import ict.db.SAMSDB;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,8 +20,10 @@ import javax.servlet.http.HttpServletResponse;
  * @author Helen&Nangen
  */
 @WebServlet(name = "handleAdminController", urlPatterns = {"/handleAdminController"})
-public class handleAdminController extends HttpServlet {
+public class HandleAdminController extends HttpServlet {
 
+    private SAMSDB db;
+    private String action;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -29,20 +33,25 @@ public class handleAdminController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+     public void init() {
+        String dbUser = this.getServletContext().getInitParameter("dbUser");
+        String dbPassword = this.getServletContext().getInitParameter("dbPassword");
+        String dbUrl = this.getServletContext().getInitParameter("dbUrl");
+        db = new SAMSDB(dbUrl, dbUser, dbPassword);
+        db.createTables();
+
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet handleAdminController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet handleAdminController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String action = request.getParameter("action");
+        
+        PrintWriter out = response.getWriter();
+        //create account page
+        if (action.equals("createAccount")) {
+            RequestDispatcher rd;
+            rd = getServletContext().getRequestDispatcher("/createAccount.jsp");
+            rd.forward(request, response);
         }
     }
 
@@ -58,6 +67,7 @@ public class handleAdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        init();
         processRequest(request, response);
     }
 
@@ -72,6 +82,7 @@ public class handleAdminController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        init();
         processRequest(request, response);
     }
 

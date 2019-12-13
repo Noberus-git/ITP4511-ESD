@@ -240,7 +240,36 @@ public class SAMSDB {
         }
         return isSuccess;
     }
-
+    
+    public boolean addAccount(String id, String name, String tel, String password, String type) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        boolean isSuccess = false;
+        try {
+            cnnct = getConnection();
+            String preQueryStatement = "INSERT INTO " + type + " VALUES  (?,?,?,?)";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            pStmnt.setString(1, id);
+            pStmnt.setString(2, name);
+            pStmnt.setString(3, tel);
+            pStmnt.setString(4, password);
+            int rowCount = pStmnt.executeUpdate();
+            if (rowCount >= 1) {
+                isSuccess = true;
+            }
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return isSuccess;
+    }
+    
     public teacherBean getteacherBeanByTid(String tid) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
