@@ -14,7 +14,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <a href="teacherIndex">Back to home page</a> <br>
+        <a href="teacherIndex.jsp">Back to home page</a> <br>
         <%
             ArrayList<StudentLessonBean> studlbs = (ArrayList<StudentLessonBean>) request.getAttribute("getStudBean");
             StudentLessonBean basicData =studlbs.get(0);

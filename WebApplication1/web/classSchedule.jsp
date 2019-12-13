@@ -56,11 +56,15 @@
                 //scheduleBean sb = sbs.get(i);
                 out.println("<tr>");
                 out.println("<td>" + time[i] + "</td>");
-                out.println("<td>" + storeLesson[i][0] + "</td>");
-                out.println("<td>" + storeLesson[i][1] + "</td>");
-                out.println("<td>" + storeLesson[i][2] + "</td>");
-                out.println("<td>" + storeLesson[i][3] + "</td>");
-                out.println("<td>" + storeLesson[i][4] + "</td>");
+                
+                for (int j = 0; j < 5; j++){
+                    if(storeLesson[i][j]==null){
+                    out.println("<td></td>");
+                    }else{
+                    out.println("<td>" + storeLesson[i][j] + "</td>");
+                    }
+                }
+                
                 out.println("</tr>");
             }
 
