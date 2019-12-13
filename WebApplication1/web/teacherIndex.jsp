@@ -23,7 +23,9 @@
                 <a href="handleTeacherController?action=viewSchedule&tid=<jsp:getProperty name="teacherBean" property="tid" />">Class Schedule</a>
                 <!-- function2 -->
                 <a href="handleTeacherController?action=viewLesson&tid=<jsp:getProperty name="teacherBean" property="tid" />">Mark attendance</a>
-                <a href="handleTeacherController?action=generateReport&tid=<jsp:getProperty name="teacherBean" property="tid" />">Report</a>
+                <!--<a href="handleTeacherController?action=generateReport&tid=<jsp:getProperty name="teacherBean" property="tid" />">Report</a>
+        -->
         
+        <a href="getReportForm.jsp">Generate Report</a>
     </body>
 </html>
