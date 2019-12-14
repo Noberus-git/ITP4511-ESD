@@ -39,10 +39,13 @@
     </ul>
   </div>  
 </nav>
+    Welcome to
+
         <jsp:useBean id="teacherBean" class="ict.bean.teacherBean" scope="session"/>
             Welcome
                 <jsp:getProperty name="teacherBean" property="name" />
                 <br>
+
 
     </body>
 </html>

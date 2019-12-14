@@ -55,7 +55,7 @@
 
             }
 
-            out.println("<table border='1' >");
+            out.println("<table border='1' class='table table-striped'>");
             out.println("<tr>");
             for (int i = 0; i < days.length; i++) {
                 out.println("<th>" + days[i] + "</th>");

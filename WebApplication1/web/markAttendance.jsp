@@ -34,7 +34,7 @@
             out.println("<input type='hidden' name='Sid' value='"+basicData.getSid()+"'>");
             out.println("<input type='hidden' name='Lid' value='"+basicData.getLid()+"'>");
             
-            out.println("<table border='1' >");
+            out.println("<table border='1' class='table table-striped'>");
             out.println("<tr>");
             out.println("<th> StudId</th> <th> Student Name</th><th>Arrive</th ><th>ABS</th >");
             out.println("</tr>");

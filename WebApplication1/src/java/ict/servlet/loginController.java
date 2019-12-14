@@ -75,7 +75,7 @@ public class loginController extends HttpServlet {
             session.setAttribute("teacherBean", tb);
             targetURL = "teacherIndex.jsp";
         } else {
-            targetURL = "index.jsp";
+            targetURL = "loginFail.jsp";
         }
 
         RequestDispatcher rd;
@@ -97,7 +97,7 @@ public class loginController extends HttpServlet {
             session.setAttribute("adminBean", ab);
             targetURL = "adminIndex.jsp";
         } else {
-            targetURL = "index.jsp";
+            targetURL = "loginFail.jsp";
         }
 
         RequestDispatcher rd;

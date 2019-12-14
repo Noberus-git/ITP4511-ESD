@@ -28,7 +28,7 @@
         <%
             ArrayList<scheduleBean> sbs = (ArrayList<scheduleBean>) request.getAttribute("ScheduleBean");
             
-            out.println("<table border='1' >");
+            out.println("<table border='1' class='table table-striped'>");
             out.println("<tr>");
             out.println("<th> Lid</th> <th> Subject name</th><th> Class name</th ><th> Date</th><th> Mark attendance</th>");
             out.println("</tr>");

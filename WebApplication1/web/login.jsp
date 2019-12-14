@@ -17,9 +17,9 @@
             <input type="hidden" name="action" value="login">
             <br>
             Username:
-            <input type="text" name="username" value="">
+            <input type="text" name="username" value="" required>
             <br><br>Password:
-            <input type="text" name="password" value="">
+            <input type="text" name="password" value="" required>
             <br><br>Log in as: <br>
             Student<input type="radio" name="userType" value="student">
             Teacher<input type="radio" name="userType" value="teacher">

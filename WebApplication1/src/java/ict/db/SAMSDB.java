@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ict.db;
 
 import ict.bean.StudentLessonBean;
@@ -249,13 +244,12 @@ public class SAMSDB {
             cnnct = getConnection();
             
             if (type.equals("student")) {
-                String preQueryStatement = "INSERT INTO STUDENT VALUES (?,?,?,?,?)";
+               String preQueryStatement = "INSERT INTO `STUDENT` VALUES (?,?,?,Null,?);";
                 pStmnt = cnnct.prepareStatement(preQueryStatement);
                 pStmnt.setString(1, id);
                 pStmnt.setString(2, name);
                 pStmnt.setString(3, password);
-                pStmnt.setString(4, "NULL"); 
-                pStmnt.setString(5, tel);
+                pStmnt.setString(4, tel);
                 int rowCount = pStmnt.executeUpdate();
                 if (rowCount >= 1) {
                     isSuccess = true;
@@ -264,7 +258,7 @@ public class SAMSDB {
                 cnnct.close();
             }
             if (type.equals("admin")) {
-                String preQueryStatement = "INSERT INTO ADMIN VALUES (?,?,?,?)";
+                String preQueryStatement = "INSERT INTO `ADMIN` VALUES (?,?,?,?);";
                 pStmnt = cnnct.prepareStatement(preQueryStatement);
                 pStmnt.setString(1, id);
                 pStmnt.setString(2, name);
@@ -278,7 +272,7 @@ public class SAMSDB {
                 cnnct.close();
             }
             if (type.equals("teacher")) {
-                String preQueryStatement = "INSERT INTO TEACHER VALUES (?,?,?,?)";
+                String preQueryStatement = "INSERT INTO `TEACHER` VALUES (?,?,?,?)";
                 pStmnt = cnnct.prepareStatement(preQueryStatement);
                 pStmnt.setString(1, id);
                 pStmnt.setString(2, name);

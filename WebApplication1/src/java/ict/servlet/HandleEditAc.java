@@ -40,62 +40,44 @@ public class HandleEditAc extends HttpServlet {
         db = new SAMSDB(dbUrl, dbUser, dbPassword);
 
     }
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        init();
+        processRequest(request, response);
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        init();
+        processRequest(request, response);
+    }
+    
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         action = request.getParameter("action");
-        String type = request.getParameter("type");
+        String type = request.getParameter("userType");
+        PrintWriter out = response.getWriter();
+        out.println("Type: "+type);
+        out.println("<br>id"+request.getParameter("id"));
+        out.println("<br>name"+request.getParameter("name"));
+        out.println("<br>tel"+request.getParameter("tel"));
+        out.println("<br>password"+request.getParameter("password"));
         
         if (action.equals("add")) {
+
             String id = request.getParameter("id");
             String name = request.getParameter("name");
             String tel = request.getParameter("tel");
             String password = request.getParameter("password");
             
-            db.addAccount(id, name, tel, password, type);
+            boolean s=db.addAccount(id, name, tel, password, type);
+            out.print(s);
             
-            response.sendRedirect("adminIndex.jsp");
+            
+            
+            response.sendRedirect("index.jsp");
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        init();
-        processRequest(request, response);
-    }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        init();
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }
