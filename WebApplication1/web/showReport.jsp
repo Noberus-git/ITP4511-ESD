@@ -25,40 +25,27 @@
 </nav>
         <%
             ArrayList<scheduleBean> lessonB = (ArrayList<scheduleBean>) request.getAttribute("getScheduleBeanlist");
-
             ArrayList less60Stud = new ArrayList();
-
             scheduleBean basicData = lessonB.get(0);
             out.println("<div class='container'>Subject Name:" + basicData.getSubjectName() + "");
-
             out.println("Class Name:" + basicData.getClassName() + "");
-
             out.println("Total lesson:" + lessonB.size() + "");
-
             out.println("<table  class='table table-striped' >");
             out.println("<tr>");
-
             out.println("<th> Student Name</th>");
             for (int i = 0; i < lessonB.size(); i++) {
                 scheduleBean sb = lessonB.get(i);
                 out.println("<th>" + sb.getLid() + "</th>");
             }
-
             out.println("<th>Attendance</th>");
             out.println("</tr>");
-
             ArrayList<StudentLessonBean> studlbs = (ArrayList<StudentLessonBean>) request.getAttribute("getStudentLessonBean");
             String sid = studlbs.get(0).getStudID();
-
             out.println("<tr>");
             out.println("<th>  " + studlbs.get(0).getStudName() + "</th>");
-
             long studArriveNo = 0;
-
             for (int j = 0; j < studlbs.size(); j++) {
-
                 StudentLessonBean slb = studlbs.get(j);
-
                 if (!sid.equals(slb.getStudID())) {
                     long studAttendance = studArriveNo;
                     long resultAttendance = studAttendance * 100 / 3;
@@ -67,17 +54,14 @@
                     if (resultAttendance < 60) {
                         less60Stud.add(studlbs.get(j - 1));
                     }
-
                     out.println("</tr> ");
                     out.println("<tr>");
                     out.println("<th>  " + slb.getStudName() + "</th>");
-
                 }
                 out.println("<th>  " + slb.getAttendance() + "</th>");
                 if (slb.getAttendance().equals("1")) {
                     studArriveNo++;
                 }
-
                 if (j == studlbs.size() - 1) {
                     long studAttendance = studArriveNo;
                     long resultAttendance = studAttendance * 100 / 3;
@@ -87,13 +71,10 @@
                     }
                     out.println("</tr> ");
                 }
-
                 sid = slb.getStudID();
             }
-
             
             out.println("</table>");
-
             if (less60Stud.size() == 0) {
                 out.println("<br>");
                 out.println("All students have enough attendance.");
@@ -102,14 +83,10 @@
                 out.println("<div id='demo' class='collapse'>");
                 out.println("These Students's attendance is less than 60%");
                 out.println("<table class='table table-striped' >");
-
                 out.println("<tr><th>Student Id</th><th>Student Name</th></tr>");
-
                 for (int i = 0; i < less60Stud.size(); i++) {
                     StudentLessonBean retakeStud = (StudentLessonBean) less60Stud.get(i);
-
                     out.println("<tr><th> " + retakeStud.getStudID() + "</th>");
-
                     out.println("<th> " + retakeStud.getStudName() + "</th></tr>");
                 }
                 out.println("</table>");

@@ -76,7 +76,7 @@ public class GenerateReportController extends HttpServlet{
             
             //get student beans
             ArrayList<StudentLessonBean> slb;
-            slb = db.getStudentLessonBeanByTidAndCidAndSiD(getTid,getClassID,getSubjectID);
+            slb = db.showReport(getTid,getClassID,getSubjectID);
             
             out.println("StudentLessonBean size: "+slb.size());
             out.println("<br>Student Name: "+slb.get(0).getStudName());

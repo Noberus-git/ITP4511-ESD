@@ -525,15 +525,14 @@ public class SAMSDB {
             cnnct = getConnection();
             String preQueryStatement
 
-                    = //                    "SELECT * FROM `class`, `lesson` , `teacher`,`subject` \n"
-                    //                    + "                    WHERE `teacher`.`tId`=`subject`.`tId` AND \n"
-                    //                    + "                    `lesson`.`sId`=`subject`.`sId` AND\n"
-                    //                    + "                     `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`=  "+tid+" \n"
-                    //                    + "                    And `class`.`cId`="+cid+" AND `subject`.`sId`="+sid+";" ;
-                    "SELECT * FROM  `studlesson` ,`subject`,`student`   "
+//                    = "SELECT * FROM `studlesson` ,`subject`,`student` "
+//                    + "WHERE `studlesson`.`sid`=`subject`.`sid` AND `studlesson`.`studId`=`student`.`studId`"
+//                    + "AND `subject`.`tId`= "+tid+" And `student`.`cId`="+cid+" AND `subject`.`sId`="+sid+" "
+//                    + "ORDER BY `studlesson`.`studId`,`studlesson`.`LId` ASC";
+                    ="SELECT * FROM  `studlesson` ,`subject`,`student`   "
                     + "WHERE `studlesson`.`sid`=`subject`.`sid`  "
                     + "AND `studlesson`.`studId`=`student`.`studId`"
-                    + "AND `subject`.`tId`=  "+tid+"  And `student`.`cId`="+cid+" AND `subject`.`sId`="+sid+";";
+                    + "AND `subject`.`tId`=  "+tid+"  And `student`.`cId`="+cid+" AND `subject`.`sId`="+sid+"ORDER BY  `studlesson`.`studId`,`studlesson`.`LId` ASC;";
 
 
             pStmnt = cnnct.prepareStatement(preQueryStatement);
@@ -565,6 +564,58 @@ public class SAMSDB {
         return arrayRs;
 
     }
+    
+    public ArrayList showReport(String tid, String cid, String sid) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+
+        ArrayList arrayRs = new ArrayList();
+        try {
+
+            cnnct = getConnection();
+            String preQueryStatement
+
+                    = "SELECT * FROM `studlesson` ,`subject`,`student` "
+                    + "WHERE `studlesson`.`sid`=`subject`.`sid` AND `studlesson`.`studId`=`student`.`studId`"
+                    + "AND `subject`.`tId`= "+tid+" And `student`.`cId`="+cid+" AND `subject`.`sId`="+sid+" "
+                    + "ORDER BY `studlesson`.`studId`,`studlesson`.`LId` ASC";
+/*                    ="SELECT * FROM  `studlesson` ,`subject`,`student`   "
+                    + "WHERE `studlesson`.`sid`=`subject`.`sid`  "
+                    + "AND `studlesson`.`studId`=`student`.`studId`"
+                    + "AND `subject`.`tId`=  "+tid+"  And `student`.`cId`="+cid+" AND `subject`.`sId`="+sid+"ORDER BY  `studlesson`.`studId`,`studlesson`.`LId` ASC;";
+*/
+
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+
+            ResultSet rs = pStmnt.executeQuery();
+
+            while (rs.next()) {
+                StudentLessonBean sb = new StudentLessonBean();
+                // set the record detail to the StudentLessonBean 
+                sb.setStudID(rs.getString("studID"));
+                sb.setStudName(rs.getString("name"));
+                sb.setLid(rs.getString("LId"));
+                sb.setSid(rs.getString("sId"));
+                sb.setAttendance(rs.getString("attendance"));
+
+                arrayRs.add(sb);
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return arrayRs;
+    }
+    
+    
+    
 
     public ArrayList getSubjectBeanByTid(String tid) {
         Connection cnnct = null;
