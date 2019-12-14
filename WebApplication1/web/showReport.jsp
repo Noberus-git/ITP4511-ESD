@@ -48,7 +48,7 @@
                 StudentLessonBean slb = studlbs.get(j);
                 if (!sid.equals(slb.getStudID())) {
                     long studAttendance = studArriveNo;
-                    long resultAttendance = studAttendance * 100 / 3;
+                    long resultAttendance = studAttendance * 100 / lessonB.size();
                     out.println("<th> " + resultAttendance + "%</th>");
                     studArriveNo = 0;
                     if (resultAttendance < 60) {
@@ -64,7 +64,7 @@
                 }
                 if (j == studlbs.size() - 1) {
                     long studAttendance = studArriveNo;
-                    long resultAttendance = studAttendance * 100 / 3;
+                    long resultAttendance = studAttendance * 100 / lessonB.size();
                     out.println("<th> " + resultAttendance + "%</th>");
                     if (resultAttendance < 60) {
                         less60Stud.add(studlbs.get(j - 1));
