@@ -38,7 +38,6 @@ public class HandleEditAc extends HttpServlet {
         String dbPassword = this.getServletContext().getInitParameter("dbPassword");
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");
         db = new SAMSDB(dbUrl, dbUser, dbPassword);
-        db.createTables();
 
     }
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)

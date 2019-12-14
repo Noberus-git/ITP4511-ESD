@@ -247,18 +247,50 @@ public class SAMSDB {
         boolean isSuccess = false;
         try {
             cnnct = getConnection();
-            String preQueryStatement = "INSERT INTO " + type + " VALUES  (?,?,?,?)";
-            pStmnt = cnnct.prepareStatement(preQueryStatement);
-            pStmnt.setString(1, id);
-            pStmnt.setString(2, name);
-            pStmnt.setString(3, tel);
-            pStmnt.setString(4, password);
-            int rowCount = pStmnt.executeUpdate();
-            if (rowCount >= 1) {
-                isSuccess = true;
+            
+            if (type.equals("student")) {
+                String preQueryStatement = "INSERT INTO STUDENT VALUES (?,?,?,?,?)";
+                pStmnt = cnnct.prepareStatement(preQueryStatement);
+                pStmnt.setString(1, id);
+                pStmnt.setString(2, name);
+                pStmnt.setString(3, password);
+                pStmnt.setString(4, "NULL"); 
+                pStmnt.setString(5, tel);
+                int rowCount = pStmnt.executeUpdate();
+                if (rowCount >= 1) {
+                    isSuccess = true;
+                }
+                pStmnt.close();
+                cnnct.close();
             }
-            pStmnt.close();
-            cnnct.close();
+            if (type.equals("admin")) {
+                String preQueryStatement = "INSERT INTO ADMIN VALUES (?,?,?,?)";
+                pStmnt = cnnct.prepareStatement(preQueryStatement);
+                pStmnt.setString(1, id);
+                pStmnt.setString(2, name);
+                pStmnt.setString(3, tel);
+                pStmnt.setString(4, password);
+                int rowCount = pStmnt.executeUpdate();
+                if (rowCount >= 1) {
+                    isSuccess = true;
+                }
+                pStmnt.close();
+                cnnct.close();
+            }
+            if (type.equals("teacher")) {
+                String preQueryStatement = "INSERT INTO TEACHER VALUES (?,?,?,?)";
+                pStmnt = cnnct.prepareStatement(preQueryStatement);
+                pStmnt.setString(1, id);
+                pStmnt.setString(2, name);
+                pStmnt.setString(3, password);
+                pStmnt.setString(4, tel);
+                int rowCount = pStmnt.executeUpdate();
+                if (rowCount >= 1) {
+                    isSuccess = true;
+                }
+                pStmnt.close();
+                cnnct.close();
+            }  
         } catch (SQLException ex) {
             while (ex != null) {
                 ex.printStackTrace();
