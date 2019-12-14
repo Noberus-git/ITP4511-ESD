@@ -54,7 +54,7 @@ public class HandleEditAc extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         action = request.getParameter("action");
-        String type = request.getParameter("userType");
+        String type = request.getParameter("type");
         PrintWriter out = response.getWriter();
         out.println("Type: "+type);
         out.println("<br>id"+request.getParameter("id"));
@@ -71,10 +71,20 @@ public class HandleEditAc extends HttpServlet {
             
             boolean s=db.addAccount(id, name, tel, password, type);
             out.print(s);
+  
+            response.sendRedirect("adminIndex.jsp");
+        } else if (action.equals("edit")) {
             
-            
-            
-            response.sendRedirect("index.jsp");
+            String id = request.getParameter("id");
+            String name = request.getParameter("name");
+            String tel = request.getParameter("tel");
+            String password = request.getParameter("password");
+            String className = "";
+            if (type.equals("student"))
+                className = request.getParameter("c");
+                
+            db.editAccount(id, name, tel, password, type, className);
+            response.sendRedirect("adminIndex.jsp");
         }
     }
 

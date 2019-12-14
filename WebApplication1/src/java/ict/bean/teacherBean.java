@@ -12,14 +12,34 @@ package ict.bean;
 public class teacherBean {
     String tid;
     String name;
-
+    String password;
+    String tel;
     
     public teacherBean(){}
-    public teacherBean(String tid, String name){
-        this.tid=tid;
-        this.name=name;
-        
+
+    public teacherBean(String tid, String name, String password, String tel) {
+        this.tid = tid;
+        this.name = name;
+        this.password = password;
+        this.tel = tel;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+    
     
    public void setTid(String tid){
        this.tid=tid;

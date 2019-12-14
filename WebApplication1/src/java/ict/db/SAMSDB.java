@@ -1,5 +1,7 @@
 package ict.db;
 
+import ict.bean.ClassBean;
+import ict.bean.StudentBean;
 import ict.bean.StudentLessonBean;
 import ict.bean.SubjectClassReportBean;
 import ict.bean.adminBean;
@@ -558,6 +560,52 @@ public class SAMSDB {
         return arrayRs;
 
     }
+    public ArrayList queryStudent() {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        try {
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT studId, name, password, tel, "
+                    + "Classname FROM `student`, class WHERE student.cId = class.cId";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //Statement s = cnnct.createStatement();
+            ResultSet rs = pStmnt.executeQuery();
+
+            ArrayList list = new ArrayList();
+
+            while (rs.next()) {
+                StudentBean cb = new StudentBean();
+                cb.setStudId(rs.getString(1));
+                cb.setName(rs.getString(2));
+                cb.setPassword(rs.getString(3));
+                cb.setTel(rs.getString(4));
+                cb.setclassName(rs.getString(5));
+                list.add(cb);
+            }
+            return list;
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (pStmnt != null) {
+                try {
+                    pStmnt.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (cnnct != null) {
+                try {
+                    cnnct.close();
+                } catch (SQLException sqlEx) {
+                }
+            }
+        }
+        return null;
+    }
     
     public ArrayList showReport(String tid, String cid, String sid) {
         Connection cnnct = null;
@@ -846,6 +894,312 @@ public class SAMSDB {
             classPercent = 100 * arriveStudentNo / maxStudentNo;
         }
         return classPercent;
+    }
+
+    public StudentBean queryStudentByID(String id) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+
+        StudentBean sb = null;
+        try {
+            //1.  get Connection
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT studId, name, password, tel, "
+                    + "Classname FROM `student`, class WHERE student.cId = class.cId AND studId=?";
+            //2.  get the prepare Statement
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //3. update the placehoder with id
+            pStmnt.setString(1, id);
+            ResultSet rs = null;
+            //4. execute the query and assign to the result 
+            rs = pStmnt.executeQuery();
+            if (rs.next()) {
+                sb = new StudentBean();
+                // set the record detail to the customer bean
+                sb.setStudId(rs.getString(1));
+                sb.setName(rs.getString(2));
+                sb.setPassword(rs.getString(3));
+                sb.setTel(rs.getString(4));
+                sb.setclassName(rs.getString(5));
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return sb;
+    }
+
+    public adminBean queryAdminByID(String id) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+
+        adminBean ab = null;
+        try {
+            //1.  get Connection
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM `admin` WHERE aId=?";
+            //2.  get the prepare Statement
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //3. update the placehoder with id
+            pStmnt.setString(1, id);
+            ResultSet rs = null;
+            //4. execute the query and assign to the result 
+            rs = pStmnt.executeQuery();
+            if (rs.next()) {
+                ab = new adminBean();
+                // set the record detail to the customer bean
+                ab.setaId(rs.getString(1));
+                ab.setName(rs.getString(2));
+                ab.setTel(rs.getString(3));
+                ab.setPassword(rs.getString(4));
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return ab;
+    }
+
+    public teacherBean queryTeacherByID(String id) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+
+        teacherBean tb = null;
+        try {
+            //1.  get Connection
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM `teacher` WHERE tId=?";
+            //2.  get the prepare Statement
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //3. update the placehoder with id
+            pStmnt.setString(1, id);
+            ResultSet rs = null;
+            //4. execute the query and assign to the result 
+            rs = pStmnt.executeQuery();
+            if (rs.next()) {
+                tb = new teacherBean();
+                // set the record detail to the customer bean
+                tb.setTid(rs.getString(1));
+                tb.setName(rs.getString(2));
+                tb.setPassword(rs.getString(3));
+                tb.setTel(rs.getString(4));
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return tb;
+    }
+
+    public ArrayList queryClass() {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        try {
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM  class";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //Statement s = cnnct.createStatement();
+            ResultSet rs = pStmnt.executeQuery();
+
+            ArrayList list = new ArrayList();
+
+            while (rs.next()) {
+                ClassBean cb = new ClassBean();
+                cb.setcId(rs.getString(1));
+                cb.setClassName(rs.getString(2));
+                list.add(cb);
+            }
+            return list;
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (pStmnt != null) {
+                try {
+                    pStmnt.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (cnnct != null) {
+                try {
+                    cnnct.close();
+                } catch (SQLException sqlEx) {
+                }
+            }
+        }
+        return null;
+    }
+
+    public ArrayList queryTeacher() {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        try {
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM `teacher`";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //Statement s = cnnct.createStatement();
+            ResultSet rs = pStmnt.executeQuery();
+
+            ArrayList list = new ArrayList();
+
+            while (rs.next()) {
+                teacherBean tb = new teacherBean();
+                tb.setTid(rs.getString(1));
+                tb.setName(rs.getString(2));
+                tb.setPassword(rs.getString(3));
+                tb.setTel(rs.getString(4));
+                list.add(tb);
+            }
+            return list;
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (pStmnt != null) {
+                try {
+                    pStmnt.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (cnnct != null) {
+                try {
+                    cnnct.close();
+                } catch (SQLException sqlEx) {
+                }
+            }
+        }
+        return null;
+    }
+
+    public ArrayList queryAdmin() {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        try {
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM `admin`";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //Statement s = cnnct.createStatement();
+            ResultSet rs = pStmnt.executeQuery();
+
+            ArrayList list = new ArrayList();
+
+            while (rs.next()) {
+                adminBean ab = new adminBean();
+                ab.setaId(rs.getString(1));
+                ab.setName(rs.getString(2));
+                ab.setTel(rs.getString(3));
+                ab.setPassword(rs.getString(4));
+                list.add(ab);
+            }
+            return list;
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (pStmnt != null) {
+                try {
+                    pStmnt.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (cnnct != null) {
+                try {
+                    cnnct.close();
+                } catch (SQLException sqlEx) {
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean editAccount(String id, String name, String tel, String password, String type, String className) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        int num=0;
+        try {
+            cnnct = getConnection();
+            String preQueryStatement = "";
+            if (type.equals("student")) {
+                preQueryStatement = "UPDATE student SET NAME=? ,password=? ,cId=?, tel=? WHERE studId=?";
+                pStmnt = cnnct.prepareStatement(preQueryStatement);
+                pStmnt.setString(1, name);
+                pStmnt.setString(2, password);
+                pStmnt.setString(3, className);
+                pStmnt.setString(4, tel);
+                pStmnt.setString(5, id);
+            } else if (type.equals("admin")) {
+                preQueryStatement = "UPDATE admin SET NAME=?, password=?, tel=? WHERE aId=?";
+                pStmnt = cnnct.prepareStatement(preQueryStatement);
+                pStmnt.setString(1, name);
+                pStmnt.setString(2, password);
+                pStmnt.setString(3, tel);
+                pStmnt.setString(4, id);
+            } else if (type.equals("teacher")) {
+                preQueryStatement = "UPDATE teacher SET NAME=?, password=?, tel=? WHERE tId=?";
+                pStmnt = cnnct.prepareStatement(preQueryStatement);
+                pStmnt.setString(1, name);
+                pStmnt.setString(2, password);
+                pStmnt.setString(3, tel);
+                pStmnt.setString(4, id);
+            }
+            //Statement s = cnnct.createStatement();
+            num= pStmnt.executeUpdate();
+          
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (pStmnt != null) {
+                try {
+                    pStmnt.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (cnnct != null) {
+                try {
+                    cnnct.close();
+                } catch (SQLException sqlEx) {
+                }
+            }
+        }
+         return (num == 1) ? true : false;
     }
 
 }

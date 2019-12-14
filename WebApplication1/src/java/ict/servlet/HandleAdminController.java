@@ -5,9 +5,14 @@
  */
 package ict.servlet;
 
+import ict.bean.ClassBean;
+import ict.bean.StudentBean;
+import ict.bean.adminBean;
+import ict.bean.teacherBean;
 import ict.db.SAMSDB;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -52,6 +57,41 @@ public class HandleAdminController extends HttpServlet {
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/createAccount.jsp");
             rd.forward(request, response);
+        } else if (action.equals("list")) {
+            ArrayList<StudentBean> students = db.queryStudent();
+            request.setAttribute("students", students);
+            ArrayList<teacherBean> teachers = db.queryTeacher();
+            request.setAttribute("teachers", teachers);
+            ArrayList<adminBean> admins = db.queryAdmin();
+            request.setAttribute("admins", admins);
+            RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/listAccounts.jsp");
+            rd.forward(request, response);
+        } else if (action.equals("getEditAccount")) {
+            String id = request.getParameter("id"); 
+            String type = request.getParameter("type");
+            
+            if ("student".equalsIgnoreCase(type)) {
+                StudentBean s = db.queryStudentByID(id);
+                request.setAttribute("s", s);
+                ArrayList<ClassBean> classes = db.queryClass();
+                request.setAttribute("c", classes);
+                
+                RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/editAccount.jsp");
+                rd.forward(request, response); 
+            } else if ("admin".equalsIgnoreCase(type)) {
+                adminBean a = db.queryAdminByID(id);
+                request.setAttribute("a", a);
+                
+                RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/editAccount.jsp");
+                rd.forward(request, response);
+            } else if ("teacher".equalsIgnoreCase(type)) {
+                teacherBean t = db.queryTeacherByID(id);
+                request.setAttribute("t", t);
+                
+                RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/editAccount.jsp");
+                rd.forward(request, response);
+            }
+            
         }
     }
 

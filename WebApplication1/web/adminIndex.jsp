@@ -18,5 +18,7 @@
         
         <!--Function 1: create account -->
         <a href="handleAdminController?action=createAccount" >Create account</a>
+        <!--Function 2: modify account and role -->
+        <a href="handleAdminController?action=list" >Modify account</a> 
     </body>
 </html>

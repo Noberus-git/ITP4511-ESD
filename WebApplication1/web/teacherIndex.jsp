@@ -39,7 +39,6 @@
     </ul>
   </div>  
 </nav>
-    Welcome to
 
         <jsp:useBean id="teacherBean" class="ict.bean.teacherBean" scope="session"/>
             Welcome

@@ -13,13 +13,20 @@ public class adminBean {
 
     String aId;
     String name;
+    String tel;
+    String password;
+    
 
     public adminBean() {}
 
-    public adminBean(String aId, String name) {
+    public adminBean(String aId, String name, String tel, String password) {
         this.aId = aId;
         this.name = name;
+        this.tel = tel;
+        this.password = password;
     }
+
+    
 
     public void setaId(String aId) {
         this.aId = aId;
@@ -27,6 +34,22 @@ public class adminBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getaId() {
