@@ -466,7 +466,8 @@ public class SAMSDB {
 
     }
 
-    public ArrayList getScheduleBeanByTidAndCidAndSiDToShowLesson(String tid, String cid,String sid) {
+    //show lessons on report 
+    public ArrayList getScheduleBeanByTidAndCidAndSiDToShowLesson(String tid, String cid, String sid) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
 
@@ -475,14 +476,11 @@ public class SAMSDB {
 
             cnnct = getConnection();
             String preQueryStatement
-                    
                     = "SELECT * FROM `class`, `lesson` , `teacher`,`subject` \n"
                     + "                    WHERE `teacher`.`tId`=`subject`.`tId` AND \n"
                     + "                    `lesson`.`sId`=`subject`.`sId` AND\n"
-                    + "                     `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`=  "+tid+" \n"
-                    + "                    And `class`.`cId`="+cid+" AND `subject`.`sId`="+sid+";" ;
-            
-
+                    + "                     `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`=  " + tid + " \n"
+                    + "                    And `class`.`cId`=" + cid + " AND `subject`.`sId`=" + sid + ";";
 
             pStmnt = cnnct.prepareStatement(preQueryStatement);
 
@@ -492,12 +490,64 @@ public class SAMSDB {
                 scheduleBean sb = new scheduleBean();
                 // set the record detail to the customer bean
                 sb.setCid(rs.getString("cid"));
-                
+
                 sb.setClassName(rs.getString("Classname"));
                 sb.setLid(rs.getString("Lid"));
-               
+
                 sb.setSubjectName(rs.getString("SubjectName"));
                 sb.setSid(rs.getString("sId"));
+
+                arrayRs.add(sb);
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return arrayRs;
+
+    }
+    //report
+    //show Student Lesson attendance 
+    public ArrayList getStudentLessonBeanByTidAndCidAndSiD(String tid, String cid, String sid) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+
+        ArrayList arrayRs = new ArrayList();
+        try {
+
+            cnnct = getConnection();
+            String preQueryStatement
+
+                    = //                    "SELECT * FROM `class`, `lesson` , `teacher`,`subject` \n"
+                    //                    + "                    WHERE `teacher`.`tId`=`subject`.`tId` AND \n"
+                    //                    + "                    `lesson`.`sId`=`subject`.`sId` AND\n"
+                    //                    + "                     `class`.`cId`= `Lesson`.`cId` AND `teacher`.`tId`=  "+tid+" \n"
+                    //                    + "                    And `class`.`cId`="+cid+" AND `subject`.`sId`="+sid+";" ;
+                    "SELECT * FROM  `studlesson` ,`subject`,`student`   "
+                    + "WHERE `studlesson`.`sid`=`subject`.`sid`  "
+                    + "AND `studlesson`.`studId`=`student`.`studId`"
+                    + "AND `subject`.`tId`=  "+tid+"  And `student`.`cId`="+cid+" AND `subject`.`sId`="+sid+";";
+
+
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+
+            ResultSet rs = pStmnt.executeQuery();
+
+            while (rs.next()) {
+                StudentLessonBean sb = new StudentLessonBean();
+                // set the record detail to the StudentLessonBean 
+                sb.setStudID(rs.getString("studID"));
+                sb.setStudName(rs.getString("name"));
+                sb.setLid(rs.getString("LId"));
+                sb.setSid(rs.getString("sId"));
+                sb.setAttendance(rs.getString("attendance"));
 
                 arrayRs.add(sb);
             }
@@ -553,7 +603,7 @@ public class SAMSDB {
         }
         return arrayRs;
     }
-
+    //mark attendance
     //show a student detail to mark attendance 
     public ArrayList getStudBean(String Lid, String Sid, String cid) {
         Connection cnnct = null;
@@ -593,7 +643,7 @@ public class SAMSDB {
         }
         return arrayRs;
     }
-
+    //mark attendance
     // CURD => U
     public boolean makeAttendance(String Sid, String Lid, String studId) {
         Connection cnnct = null;

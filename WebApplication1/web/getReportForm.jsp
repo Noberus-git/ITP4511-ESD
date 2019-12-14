@@ -12,7 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <a href="teacherIndex">Back to home page</a> <br>
+        <a href="teacherIndex.jsp">Back to home page</a> <br>
         Teacher Name: <jsp:getProperty name="teacherBean" property="name" /> <br>
         Teacher ID: <jsp:getProperty name="teacherBean" property="tid" />
         
@@ -24,11 +24,11 @@
             Class ID: <input type="text" name="classID">
             <br> <br>
             Subject ID: <input type="text" name="subjectID">
-            <br><br>
-            Special request: 
-            <input type="radio" name="specialRequest" value="normal" checked>No request
-             <input type="radio" name="specialRequest" value="lessThan60">Attendance　less than 60%
-             <br><br><input type="submit" value="Generate">
+            <br>
+            
+             <input type="hidden" name="specialRequest" value="normal" checked>
+            
+             <br><input type="submit" value="Generate">
         </form>
     </body>
 </html>

@@ -74,9 +74,19 @@ public class GenerateReportController extends HttpServlet{
 
             sb = db.getScheduleBeanByTidAndCidAndSiDToShowLesson(getTid,getClassID,getSubjectID);
             
+            //get student beans
+            ArrayList<StudentLessonBean> slb;
+            slb = db.getStudentLessonBeanByTidAndCidAndSiD(getTid,getClassID,getSubjectID);
+            
+            out.println("StudentLessonBean size: "+slb.size());
+            out.println("<br>Student Name: "+slb.get(0).getStudName());
+            
+            out.println("<br>Student attendance: "+slb.get(0).getAttendance());
+            
             if (sb != null) {
                 out.println("Bean size: "+sb.size());
                 request.setAttribute("getScheduleBeanlist", sb);
+                request.setAttribute("getStudentLessonBean", slb);
                 targetURL = "showReport.jsp";
             }else {
                 targetURL = "teacherIndex.jsp";
