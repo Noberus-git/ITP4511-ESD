@@ -19,6 +19,7 @@
             ArrayList<StudentBean> students = (ArrayList<StudentBean>) request.getAttribute("students");
             ArrayList<teacherBean> teachers = (ArrayList<teacherBean>) request.getAttribute("teachers");
             ArrayList<adminBean> admins = (ArrayList<adminBean>) request.getAttribute("admins");
+            ArrayList<StudentBean> newStudents = (ArrayList<StudentBean>) request.getAttribute("newStudents");
             out.println("<h1>Users list</h1>");
             out.println("<h4>Students</h4>");
             out.println("<table border='1'>");
@@ -40,6 +41,26 @@
             }
             out.println("</table>");
 
+            
+            out.println("<h4>New students</h4>");
+            out.println("<table border='1'>");
+            out.println("<tr>");
+            out.println("<th>Id</th>  <th> Name</th><th> Phone number</th>");
+            out.println("</tr>");
+            
+            for (int i = 0; i < newStudents.size(); i++) {
+                StudentBean sb = newStudents.get(i);
+                out.println("<tr>");
+
+                out.println("<td>" + sb.getStudId() + "</td>");
+                out.println("<td>" + sb.getName() + "</td>");
+                out.println("<td>" + sb.getTel() + "</td>");
+                out.println("<td>" + "<a href=\"handleAdminController?action=getEditAccount&type=newStudent&id=" + sb.getStudId() + "\">edit</a>" + "</td>");
+                out.println("</tr>");
+
+            }
+            out.println("</table>");
+            
             
             out.println("<h4>Teachers</h4>");
             out.println("<table border='1'>");

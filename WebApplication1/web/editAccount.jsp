@@ -13,6 +13,7 @@
 <%
     String type = request.getParameter("type");
     StudentBean sb = (StudentBean) request.getAttribute("s");
+    StudentBean nsb = (StudentBean) request.getAttribute("sb");
     teacherBean tb = (teacherBean) request.getAttribute("t");
     adminBean ab = (adminBean) request.getAttribute("a");
     ArrayList<ClassBean> classes = (ArrayList<ClassBean>)request.getAttribute("c");
@@ -24,6 +25,12 @@
         tel = sb.getTel();
         password = sb.getPassword();
         className = sb.getclassName();
+    } else if (type.equals("newStudent")) {
+        id = nsb.getStudId();
+        name = nsb.getName();
+        tel = nsb.getTel();
+        password = nsb.getPassword();
+        className = nsb.getclassName();
     } else if (type.equals("teacher")) {
         id = tb.getTid();
         name = tb.getName();
@@ -52,19 +59,25 @@
            Username <input type="text" name="name" value="<%=name %>" /> <br>
            Password <input type="text" name="password" value="<%=password %>" /> <br>
            Telephone no. <input type="text" name="tel" value="<%=tel %>" /> <br>
-           <% if (type.equals("student")) {
+           <% if (type.equals("student") || type.equals("newStudent")) {
                
                out.println("Class <select name=\"c\">" );
                for (int i = 0; i < classes.size();i++) { 
                    %>
-                   <option value ="<%= classes.get(i).getcId() %>"><%=classes.get(i).getClassName() %>
+                   <option value ="<%= classes.get(i).getcId() %>"<% if (type.equals("student") &&
+                           className.equals(classes.get(i).getClassName())) 
+    out.println("selected");
+                   
+                   %>>
+                       <%=classes.get(i).getClassName() %>
                    </option>
                    <%
                }  
 out.println("</select><br><br>");
 } %> <br>
            Account type <br>
-           Student <input type="radio" name="type" value="student" <% if (type.equals("student")) {
+           Student <input type="radio" name="type" value="student" <% if (type.equals("student") || 
+                   type.equals("newStudent")) {
                out.println("checked"); }%> /> 
            Teacher <input type="radio" name="type" value="teacher" <% if (type.equals("teacher")) {
                out.println("checked"); }%>/> 

@@ -58,8 +58,11 @@ public class HandleAdminController extends HttpServlet {
             rd = getServletContext().getRequestDispatcher("/createAccount.jsp");
             rd.forward(request, response);
         } else if (action.equals("list")) {
+            //list accounts
             ArrayList<StudentBean> students = db.queryStudent();
             request.setAttribute("students", students);
+            ArrayList<StudentBean> newStudents = db.queryNewStudent();
+            request.setAttribute("newStudents", newStudents);
             ArrayList<teacherBean> teachers = db.queryTeacher();
             request.setAttribute("teachers", teachers);
             ArrayList<adminBean> admins = db.queryAdmin();
@@ -67,17 +70,27 @@ public class HandleAdminController extends HttpServlet {
             RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/listAccounts.jsp");
             rd.forward(request, response);
         } else if (action.equals("getEditAccount")) {
+            //edit account page
             String id = request.getParameter("id"); 
             String type = request.getParameter("type");
             
             if ("student".equalsIgnoreCase(type)) {
                 StudentBean s = db.queryStudentByID(id);
                 request.setAttribute("s", s);
+                
                 ArrayList<ClassBean> classes = db.queryClass();
                 request.setAttribute("c", classes);
                 
                 RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/editAccount.jsp");
                 rd.forward(request, response); 
+            } else if ("newStudent".equalsIgnoreCase(type)) {
+                StudentBean sb = db.queryNewStudentByID(id);
+                request.setAttribute("sb", sb); 
+                ArrayList<ClassBean> classes = db.queryClass();
+                request.setAttribute("c", classes);
+                
+                RequestDispatcher rd = request.getServletContext().getRequestDispatcher("/editAccount.jsp");
+                rd.forward(request, response);
             } else if ("admin".equalsIgnoreCase(type)) {
                 adminBean a = db.queryAdminByID(id);
                 request.setAttribute("a", a);

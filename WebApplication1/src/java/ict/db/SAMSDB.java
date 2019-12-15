@@ -935,6 +935,45 @@ public class SAMSDB {
         }
         return sb;
     }
+    
+    public StudentBean queryNewStudentByID(String id) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+
+        StudentBean sb = null;
+        try {
+            //1.  get Connection
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM `student` WHERE studId=?";
+            //2.  get the prepare Statement
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //3. update the placehoder with id
+            pStmnt.setString(1, id);
+            ResultSet rs = null;
+            //4. execute the query and assign to the result 
+            rs = pStmnt.executeQuery();
+            if (rs.next()) {
+                sb = new StudentBean();
+                // set the record detail to the customer bean
+                sb.setStudId(rs.getString(1));
+                sb.setName(rs.getString(2));
+                sb.setPassword(rs.getString(3));
+                sb.setTel(rs.getString(5));
+                sb.setclassName("NULL");
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return sb;
+    }
 
     public adminBean queryAdminByID(String id) {
         Connection cnnct = null;
@@ -1202,4 +1241,49 @@ public class SAMSDB {
          return (num == 1) ? true : false;
     }
 
+    public ArrayList queryNewStudent() {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        try {
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM `student` WHERE cId IS NULL";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //Statement s = cnnct.createStatement();
+            ResultSet rs = pStmnt.executeQuery();
+
+            ArrayList list = new ArrayList();
+
+            while (rs.next()) {
+                StudentBean sb = new StudentBean();
+                sb.setStudId(rs.getString(1));
+                sb.setName(rs.getString(2));
+                sb.setPassword(rs.getString(3));
+                sb.setclassName("NULL");
+                sb.setTel(rs.getString(5));
+                list.add(sb);
+            }
+            return list;
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (pStmnt != null) {
+                try {
+                    pStmnt.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (cnnct != null) {
+                try {
+                    cnnct.close();
+                } catch (SQLException sqlEx) {
+                }
+            }
+        }
+        return null;
+    }
 }
