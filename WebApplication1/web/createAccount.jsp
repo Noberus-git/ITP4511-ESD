@@ -24,9 +24,9 @@
            Password <input type="text" name="password" /> <br>
            Telephone no. <input type="text" name="tel" /> <br>
            Account type <br>
-           Student <input type="radio" name="userType" id="student" checked value="student"/> 
-           Teacher <input type="radio" name="userType" id="teacher" value="teacher" /> 
-           Administrator <input type="radio" name="userType" id="admin" value="admin" /> <br>
+           Student <input type="radio" name="type" id="student" checked value="student"/> 
+           Teacher <input type="radio" name="type" id="teacher" value="teacher" /> 
+           Administrator <input type="radio" name="type" id="admin" value="admin" /> <br>
            <input type="submit" value="Create account" />
            <input type="reset" value="Clear all" />
         </form>

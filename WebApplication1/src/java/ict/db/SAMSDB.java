@@ -415,6 +415,48 @@ public class SAMSDB {
         }
         return arrayRs;
     }
+    
+    //student get subject
+public ArrayList getScheduleBeanBysId(String studid) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+
+        ArrayList arrayRs = new ArrayList();
+        try {
+
+            cnnct = getConnection();
+            String preQueryStatement
+                    = "SELECT DISTINCT(`studlesson`.`sId`),`subject`.`SubjectName` "
+                    + "FROM `studlesson`,`subject` WHERE `studlesson`.`sId`=`subject`.`sId` "
+                    + "AND `studlesson`.`studId`="+studid+"";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+
+            ResultSet rs = pStmnt.executeQuery();
+
+            while (rs.next()) {
+                scheduleBean sb = new scheduleBean();
+
+                sb.setSubjectName(rs.getString("SubjectName"));
+                sb.setSid(rs.getString("sId"));
+
+                arrayRs.add(sb);
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return arrayRs;
+    }
+
+
+
 
 //show lesson you have and the lesson detail
     public ArrayList getScheduleBeanByTidToShowLesson(String tid) {
@@ -560,29 +602,40 @@ public class SAMSDB {
         return arrayRs;
 
     }
-    public ArrayList queryStudent() {
+    //student get their attendance
+        public ArrayList getStudentLessonBeanBysidAndStudid( String sid,String studid) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
+
+        ArrayList arrayRs = new ArrayList();
         try {
+
             cnnct = getConnection();
-            String preQueryStatement = "SELECT studId, name, password, tel, "
-                    + "Classname FROM `student`, class WHERE student.cId = class.cId";
+            String preQueryStatement
+                    ="SELECT * FROM `studlesson` ,`subject`,`student` WHERE `studlesson`.`sid`=`subject`.`sid` "
+                    + "AND `studlesson`.`studId`=`student`.`studId`And `studlesson`.`studId`="+studid+" "
+                    + "AND `subject`.`sId`="+sid+" ORDER BY `studlesson`.`studId`,`studlesson`.`LId` ASC";
+
+
             pStmnt = cnnct.prepareStatement(preQueryStatement);
-            //Statement s = cnnct.createStatement();
+
             ResultSet rs = pStmnt.executeQuery();
 
-            ArrayList list = new ArrayList();
-
             while (rs.next()) {
-                StudentBean cb = new StudentBean();
-                cb.setStudId(rs.getString(1));
-                cb.setName(rs.getString(2));
-                cb.setPassword(rs.getString(3));
-                cb.setTel(rs.getString(4));
-                cb.setclassName(rs.getString(5));
-                list.add(cb);
+                StudentLessonBean sb = new StudentLessonBean();
+                // set the record detail to the StudentLessonBean 
+                sb.setStudID(rs.getString("studID"));
+                sb.setStudName(rs.getString("name"));
+                sb.setSName(rs.getString("SubjectName"));
+                sb.setLid(rs.getString("LId"));
+                sb.setSid(rs.getString("sId"));
+                sb.setAttendance(rs.getString("attendance"));
+
+                arrayRs.add(sb);
             }
-            return list;
+
+            pStmnt.close();
+            cnnct.close();
         } catch (SQLException ex) {
             while (ex != null) {
                 ex.printStackTrace();
@@ -590,23 +643,10 @@ public class SAMSDB {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
-        } finally {
-            if (pStmnt != null) {
-                try {
-                    pStmnt.close();
-                } catch (SQLException e) {
-                }
-            }
-            if (cnnct != null) {
-                try {
-                    cnnct.close();
-                } catch (SQLException sqlEx) {
-                }
-            }
         }
-        return null;
+        return arrayRs;
+
     }
-    
     public ArrayList showReport(String tid, String cid, String sid) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
@@ -1240,6 +1280,52 @@ public class SAMSDB {
         }
          return (num == 1) ? true : false;
     }
+public ArrayList queryStudent() {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        try {
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT studId, name, password, tel, "
+                    + "Classname FROM `student`, class WHERE student.cId = class.cId";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //Statement s = cnnct.createStatement();
+            ResultSet rs = pStmnt.executeQuery();
+
+            ArrayList list = new ArrayList();
+
+            while (rs.next()) {
+                StudentBean cb = new StudentBean();
+                cb.setStudId(rs.getString(1));
+                cb.setName(rs.getString(2));
+                cb.setPassword(rs.getString(3));
+                cb.setTel(rs.getString(4));
+                cb.setclassName(rs.getString(5));
+                list.add(cb);
+            }
+            return list;
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (pStmnt != null) {
+                try {
+                    pStmnt.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (cnnct != null) {
+                try {
+                    cnnct.close();
+                } catch (SQLException sqlEx) {
+                }
+            }
+        }
+        return null;
+    }
 
     public ArrayList queryNewStudent() {
         Connection cnnct = null;
@@ -1285,5 +1371,34 @@ public class SAMSDB {
             }
         }
         return null;
+    }
+
+    public boolean addClass(String id, String name) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        boolean isSuccess = false;
+        try {
+            cnnct = getConnection();
+
+            String preQueryStatement = "INSERT INTO `class` VALUES (?,?);";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            pStmnt.setString(1, id);
+            pStmnt.setString(2, name);
+            int rowCount = pStmnt.executeUpdate();
+            if (rowCount >= 1) {
+                isSuccess = true;
+            }
+            pStmnt.close();
+            cnnct.close();
+
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return isSuccess;
     }
 }

@@ -105,6 +105,10 @@ public class HandleAdminController extends HttpServlet {
                 rd.forward(request, response);
             }
             
+        } else if (action.equals("createClass")) {
+            RequestDispatcher rd;
+            rd = getServletContext().getRequestDispatcher("/createClass.jsp");
+            rd.forward(request, response);
         }
     }
 
