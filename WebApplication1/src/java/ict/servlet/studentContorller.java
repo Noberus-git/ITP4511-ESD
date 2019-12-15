@@ -36,6 +36,7 @@ public class studentContorller extends HttpServlet {
         db.createTables();
 
     }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         init();
         processRequest(request, response);
@@ -45,66 +46,52 @@ public class studentContorller extends HttpServlet {
         init();
         processRequest(request, response);
     }
-    
-    
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-             String targetURL;
+        String targetURL;
         String action = request.getParameter("action");
         String studid = request.getParameter("studid");
-        
-        PrintWriter out = response.getWriter();
-        out.println("Action: "+action);
-        out.println("studid: "+studid);
 
-        if(action.equals("viewSubjects")){
+        PrintWriter out = response.getWriter();
+        out.println("Action: " + action);
+        out.println("studid: " + studid);
+
+        if (action.equals("viewSubjects")) {
             ArrayList<scheduleBean> sb;
 
-                //normal get schedule
-                 
-                sb = db.getScheduleBeanBysId(studid);
+            //normal get schedule
+            sb = db.getScheduleBeanBysId(studid);
 
-                //get student beans
-                if (sb != null) {
-                    out.println("Bean size: "+sb.size());
-                    request.setAttribute("getStudentScheduleBeanlist", sb);
-                    targetURL = "studentAttendance.jsp";
-                }else {
-                    targetURL = "studentIndex.jsp";
-                }
-                RequestDispatcher rd;
-                rd = getServletContext().getRequestDispatcher("/" + targetURL);
-                rd.forward(request, response);
-        
-        
-        
-        
-        }else if(action.equals("viewAttendance")){
+            //get student beans
+            if (sb != null) {
+                out.println("Bean size: " + sb.size());
+                request.setAttribute("getStudentScheduleBeanlist", sb);
+                targetURL = "studentAttendance.jsp";
+            } else {
+                targetURL = "studentIndex.jsp";
+            }
+            RequestDispatcher rd;
+            rd = getServletContext().getRequestDispatcher("/" + targetURL);
+            rd.forward(request, response);
+
+        } else if (action.equals("viewAttendance")) {
             String sid = request.getParameter("sid");
             ArrayList<StudentLessonBean> sb;
-                
-                sb = db.getStudentLessonBeanBysidAndStudid(sid,studid);
-                out.println("sid: "+sid);
-                out.println("Bean size: "+sb.size());
-                if (sb != null) {
-                    //out.println("Bean size: "+sb.size());
-                    request.setAttribute("getStudentLessonBeanlist", sb);
-                    targetURL = "getStudentAttendance.jsp";
-                }else {
-                    targetURL = "studentIndex.jsp";
-                }
-                RequestDispatcher rd;
-                rd = getServletContext().getRequestDispatcher("/" + targetURL);
-                rd.forward(request, response);
 
+            sb = db.getStudentLessonBeanBysidAndStudid(sid, studid);
+            out.println("sid: " + sid);
+            out.println("Bean size: " + sb.size());
+            if (sb != null) {
+                //out.println("Bean size: "+sb.size());
+                request.setAttribute("getStudentLessonBeanlist", sb);
+                targetURL = "getStudentAttendance.jsp";
+            } else {
+                targetURL = "studentIndex.jsp";
+            }
+            RequestDispatcher rd;
+            rd = getServletContext().getRequestDispatcher("/" + targetURL);
+            rd.forward(request, response);
         }
-            
-            
-        }
-        
-        }
-    
-
-    
-
+    }
+}

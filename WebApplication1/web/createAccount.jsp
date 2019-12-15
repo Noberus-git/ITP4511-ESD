@@ -16,19 +16,25 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="nav-link text-white " href="adminIndex.jsp" />Student attendance monitoring system</a>
+
+    </nav>
+    <div class="container">
         <h2>Create a new account</h2>
         <form method="get" action="handleEditAc">
             <input type="hidden" name="action" value="add" />
-           ID <input type="text" name="id" /> <br>
-           Username <input type="text" name="name" /> <br>
-           Password <input type="text" name="password" /> <br>
-           Telephone no. <input type="text" name="tel" /> <br>
-           Account type <br>
-           Student <input type="radio" name="type" id="student" checked value="student"/> 
-           Teacher <input type="radio" name="type" id="teacher" value="teacher" /> 
-           Administrator <input type="radio" name="type" id="admin" value="admin" /> <br>
-           <input type="submit" value="Create account" />
-           <input type="reset" value="Clear all" />
+            ID <input type="text" name="id" /> <br>
+            Username <input type="text" name="name" /> <br>
+            Password <input type="text" name="password" /> <br>
+            Telephone no. <input type="text" name="tel" /> <br>
+            Account type <br>
+            Student <input type="radio" name="type" id="student" checked value="student"/> 
+            Teacher <input type="radio" name="type" id="teacher" value="teacher" /> 
+            Administrator <input type="radio" name="type" id="admin" value="admin" /> <br>
+            <input type="submit" value="Create account" />
+            <input type="reset" value="Clear all" />
         </form>
-    </body>
+    </div>
+</body>
 </html>
