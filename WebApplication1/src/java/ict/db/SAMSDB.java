@@ -202,6 +202,41 @@ public class SAMSDB {
         return isSuccess;
     }
 
+    public boolean studentLoginIsValid(String sId, String password) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        boolean isSuccess = false;
+
+        try {
+            //get max sid
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM  `student` where studId=? and password=?;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //3. update the placehoder with id
+            pStmnt.setString(1, sId);
+            pStmnt.setString(2, password);
+
+            ResultSet rs = null;
+            //4. execute the query and assign to the result 
+            rs = pStmnt.executeQuery();
+
+            if (rs.next()) {
+                // set the record detail to the customer bean
+                isSuccess = true;
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return isSuccess;
+    }
     public boolean adminLoginIsValid(String aId, String password) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
@@ -316,7 +351,7 @@ public class SAMSDB {
             rs = pStmnt.executeQuery();
 
             if (rs.next()) {
-                // set the record detail to the customer bean
+                // set the record detail to the teacher bean
                 tb.setTid(rs.getString(1));
                 tb.setName(rs.getString(2));
 
@@ -334,7 +369,42 @@ public class SAMSDB {
         }
         return tb;
     }
+    public StudentBean getStudentBeanBysId(String sId) {
+        Connection cnnct = null;
+        PreparedStatement pStmnt = null;
+        StudentBean sb = new StudentBean();
 
+        try {
+            //get max sid
+            cnnct = getConnection();
+            String preQueryStatement = "SELECT * FROM  `student` where studId=?;";
+            pStmnt = cnnct.prepareStatement(preQueryStatement);
+            //3. update the placehoder with id
+            pStmnt.setString(1, sId);
+
+            ResultSet rs = null;
+            //4. execute the query and assign to the result 
+            rs = pStmnt.executeQuery();
+
+            if (rs.next()) {
+                // set the record detail to the student bean
+                sb.setStudId(rs.getString(1));
+                sb.setName(rs.getString(2));
+            }
+
+            pStmnt.close();
+            cnnct.close();
+        } catch (SQLException ex) {
+            while (ex != null) {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return sb;
+    }
+    
     public adminBean getAdminBeanByaId(String tid) {
         Connection cnnct = null;
         PreparedStatement pStmnt = null;
@@ -353,7 +423,7 @@ public class SAMSDB {
             rs = pStmnt.executeQuery();
 
             if (rs.next()) {
-                // set the record detail to the customer bean
+                // set the record detail to the admin bean
                 ab.setaId(rs.getString(1));
                 ab.setName(rs.getString(2));
             }
@@ -1400,5 +1470,5 @@ public ArrayList queryStudent() {
             ex.printStackTrace();
         }
         return isSuccess;
-    }
+    }  
 }

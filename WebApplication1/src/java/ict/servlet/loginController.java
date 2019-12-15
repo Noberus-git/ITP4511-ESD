@@ -5,6 +5,7 @@
  */
 package ict.servlet;
 
+import ict.bean.StudentBean;
 import ict.bean.adminBean;
 import ict.bean.teacherBean;
 import ict.db.SAMSDB;
@@ -59,6 +60,9 @@ public class loginController extends HttpServlet {
         if (userType.equals("admin")) {
             adminLogin(request, response);
         }
+        if (userType.equals("student")) {
+            studentLogin(request, response);
+        }
     }
 
     public void teacherLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -96,6 +100,27 @@ public class loginController extends HttpServlet {
             adminBean ab = db.getAdminBeanByaId(username);
             session.setAttribute("adminBean", ab);
             targetURL = "adminIndex.jsp";
+        } else {
+            targetURL = "loginFail.jsp";
+        }
+
+        RequestDispatcher rd;
+        rd = getServletContext().getRequestDispatcher("/" + targetURL);
+        rd.forward(request, response);
+    }
+
+    private void studentLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        username = request.getParameter("username");
+        password = request.getParameter("password");
+
+        boolean loginValid = false;
+        loginValid = db.studentLoginIsValid(username, password);
+
+        if (loginValid) {
+            HttpSession session = request.getSession(true);
+            StudentBean sb = db.getStudentBeanBysId(username);
+            session.setAttribute("studentBean", sb);
+            targetURL = "studentIndex.jsp";
         } else {
             targetURL = "loginFail.jsp";
         }

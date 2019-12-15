@@ -12,7 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <!--Hardcode studid-->
-        <a href="studentContorller?studid=1&action=viewSubjects">see subject</a>
+        <!--view attendance record-->
+        <a href="studentContorller?studid=<jsp:getProperty  name="studentBean" property="studId" />&action=viewSubjects">View attendance</a>
     </body>
 </html>
